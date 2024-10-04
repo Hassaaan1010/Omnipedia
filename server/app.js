@@ -1,0 +1,32 @@
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import cors from "cors";
+import bodyParser from "body-parser";
+import connect_database from "./config/mongoose.js";
+dotenv.config();
+
+const port = process.env.PORT;
+const app = express();
+
+const cors_options = {
+  origin: `http://localhost:${process.env.CLIENT_PORT}`,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(cors_options));
+app.use(express.urlencoded({ extended: true }));
+
+console.log(port);
+
+(async () => {
+  try {
+    await connect_database();
+
+    app.listen(port, () => {
+      console.log(`Started running port at`, port);
+    });
+  } catch (error) {
+    console.log("Issue connecting to server/mongodb.", error);
+  }
+})();

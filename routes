@@ -1,0 +1,37 @@
+Routesflow chart
+
+/home [search] 
+
+/login
+/register
+
+/search/
+
+/subjects/subject_id/
+/subjects/subject_id/follow
+/subjets/create/
+/subjects/subject_id/edit
+/subjects/subject_id/generate/
+
+
+/subtopics/subtopic_id/
+
+
+/posts/post_id
+/posts/create
+/posts/edit/post_id/
+/posts/delete/post_id
+/posts/post_id/like
+/posts/post_id/report
+
+/reported/
+
+/profiles/profile_id
+/profiles/profile_id/posts/
+/profiles/profile_id/folders/
+
+/folders/user_id
+/folders/user_id/add
+/folders/folder_id/remove
+/folders/folder_id/
+/folders/folder_id/
