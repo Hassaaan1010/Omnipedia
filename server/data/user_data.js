@@ -19,6 +19,7 @@ export const createUser = async (username, email, password, grade) => {
   // check if user already exists
   const existingUser = await User.findOne({ $or: [{ username }, { email }] });
   if (existingUser) {
+    console.log("user already exists");
     throw badRequestErr("Username or email already exists");
   }
 

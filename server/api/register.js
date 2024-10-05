@@ -26,17 +26,17 @@ router
 
       // Required inputs exist
       if (!username || !email || !password || !grade) {
-        return badRequestErr("All fields are required");
+        throw badRequestErr("All fields are required");
       }
 
       // Input validation
       switch (true) {
         case !usernameRegex.test(username):
-          return badRequestErr("Username must have at least 6 characters");
+          throw badRequestErr("Username must have at least 6 characters");
         case !emailRegex.test(email):
-          return badRequestErr("Invalid email format");
+          throw badRequestErr("Invalid email format");
         case !passwordRegex.test(password):
-          return badRequestErr(
+          throw badRequestErr(
             "Password must contain at least one uppercase letter, one number, and be 6 characters or longer"
           );
         default:
