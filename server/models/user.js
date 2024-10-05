@@ -9,30 +9,26 @@ const userSchema = new Schema({
     required: true,
     default: "user",
   },
-  //   userId: {
-  //     type: String,
-  //     required: true,
-  //     unique: true,
-  //   },
   username: {
     type: String,
-    required: True,
-    unique: True,
+    required: true,
+    unique: true,
   },
   email: {
     type: String,
-    required: True,
-    unique: True,
+    required: true,
+    unique: true,
     match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please fill a valid email address"],
   },
   password: {
     type: String,
     required: true,
     minlength: [6, "Password must be at least 6 characters long"],
-    match: [
-      /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/,
-      "Password must contain at least one uppercase letter, one number, and be 6 characters or longer",
-    ],
+  },
+  grade: {
+    type: String,
+    required: true,
+    enum: ["graduate", "undergraduate", "high school", "middle school"],
   },
   posts: [
     {
