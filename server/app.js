@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import bodyParser from "body-parser";
 import connect_database from "./config/mongoose.js";
+import routerNode from "./api/index.js";
 dotenv.config();
 
 const port = process.env.PORT;
@@ -18,6 +19,8 @@ app.use(cors(cors_options));
 app.use(express.urlencoded({ extended: true }));
 
 console.log(port);
+
+routerNode(app);
 
 (async () => {
   try {
