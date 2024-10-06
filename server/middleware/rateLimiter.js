@@ -1,3 +1,8 @@
+/**
+ * @file middleware/rateLimiter.js
+ * @description Rate Limiting user requests.
+ */
+
 import rateLimit from "express-rate-limit";
 
 /**

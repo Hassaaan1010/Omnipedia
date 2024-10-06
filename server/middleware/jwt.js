@@ -2,7 +2,7 @@ import jsonwebtoken from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-export const createJwtToken = (user) => {
+export const createJwtToken = async (user) => {
   const expiresIn = "2h"; // 2 hour life
 
   console.log("creating token ...", user);

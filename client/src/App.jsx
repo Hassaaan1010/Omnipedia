@@ -1,30 +1,30 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
+
+// route components
 import Register from "./components/register";
+import Login from "./components/login";
+
 import "./App.css";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+
+// error handlers
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 function App() {
   // const [count, setCount] = useState(0);
 
   return (
     <>
-      <Router>
+      <BrowserRouter>
         <div className="App">
           <Routes>
             <Route path="/register" element={<Register />} />
-            {/* <Route path="/login" element={<Login />} /> */}
-            {/* <Route path="/home" element={<Home />} /> */}
-            <Route path="*" element={<Navigate replace to={"/register"} />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<Navigate replace to="/login" />} />
           </Routes>
         </div>
-      </Router>
+      </BrowserRouter>
     </>
   );
 }

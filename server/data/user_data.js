@@ -55,10 +55,15 @@ export const getUserByEmail = async (email) => {
     if (!emailRegex.test(email)) {
       throw badRequestErr("Invalid Email");
     }
-
+    console.log(email);
     // find user in collection
     const user = await User.findOne({ email: email });
+    console.log("user : ", user);
 
+    // user is null
+    if (!user) {
+      throw new Error();
+    }
     return user;
   } catch (error) {
     console.log(`Error in finding user by email ${error}`);
@@ -69,7 +74,6 @@ export const getUserByEmail = async (email) => {
 export const authenticateUser = async (email, password) => {
   // find User by email
   const user = await getUserByEmail(email);
-  console.log(user);
 
   // validate password
   if (!passwordRegex.test(password)) {
