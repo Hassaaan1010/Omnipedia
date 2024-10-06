@@ -19,6 +19,7 @@ export const authorizeToken = (req, res, next) => {
   console.log(req.headers);
   const token = req.headers.authorization;
   const tokenPart = token && token.split(" ")[1];
+  console.log(tokenPart);
   if (!tokenPart) {
     return res.status(400).json({ error: "No token provided" });
   }

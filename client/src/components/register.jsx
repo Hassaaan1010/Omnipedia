@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link, Navigate } from "react-router-dom";
 
@@ -85,7 +85,6 @@ const Register = () => {
           <select
             id="grade"
             name="grade"
-            defaultValue={""}
             value={userData.grade}
             onChange={handleChange}
             required
@@ -95,7 +94,7 @@ const Register = () => {
             </option>
             <option value="graduate">Graduate</option>
             <option value="undergraduate">Undergraduate</option>
-            <option gradevalue="high school">High School</option>
+            <option value="high school">High School</option>
             <option value="middle school">Middle School</option>
           </select>{" "}
           <br />
