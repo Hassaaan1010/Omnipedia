@@ -1,9 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { tokenValid } from "../utils/tokenValidation";
+import axios from "axios";
 
 const CreateSubject = () => {
   const [subjectName, setSubjectName] = useState("");
   const [topics, setTopics] = useState([""]); // Initialize with one empty input
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token && tokenValid(token)) {
+      const checkAuthorization = async () => {
+        try {
+          const res = await axios.get("http://localhost:4000/subjects/", {
+            headers: {
+              Authorization: `Bearer ${token}`, // Correct Authorization header
+            },
+          });
+
+          if (!res.data.authorized) {
+            console.log("auth :", res.data.authorized);
+            navigate("/login"); // Redirect to login if not authorized
+          }
+        } catch (error) {
+          console.error("Error during authorization check:", error);
+          navigate("/login"); // Redirect to login on any error
+        }
+      };
+
+      checkAuthorization();
+    } else {
+      localStorage.clear();
+      navigate("/login"); // Redirect to login if the token is invalid
+      // continue on page
+    }
+  }, [navigate]); // Add navigate as a dependency
 
   // Handle input changes for subject name
   const handleSubjectNameChange = (e) => {

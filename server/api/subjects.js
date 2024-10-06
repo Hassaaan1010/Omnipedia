@@ -1,13 +1,15 @@
 import express from "express";
 import { createSubject } from "../data/subject_data.js";
 import { sendErrResp } from "../utils/errorHandling.js";
+import { apiLimiter } from "../middleware/rateLimiter.js";
+import { authorizeToken } from "../middleware/jwtAuthorizer.js";
 
 const router = express.Router();
 const nameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*(\s+[a-zA-Z_][a-zA-Z0-9_]*)*$/;
 
 router
-  .get("/", (req, res) => {
-    res.send("Subjects route reached.");
+  .get("/", apiLimiter, authorizeToken, (req, res) => {
+    res.status(200).json({ authorized: true });
   })
   .post("/create", async (req, res) => {
     try {
