@@ -26,11 +26,6 @@ const subjectSchema = new Schema({
       default: [],
     },
   ],
-  minimum_grade: {
-    type: [String],
-    enum: ["undergrad", "senior_high", "high_school", "middle_school"], // Drop-down options for grades
-    required: true,
-  },
   llm_content: {
     type: Schema.Types.ObjectId, // Link to omnipost (assuming a post model)
     ref: "Omnipost",

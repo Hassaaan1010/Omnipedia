@@ -7,6 +7,11 @@ const topicSchema = new Schema({
     required: true,
     unique: true,
   },
+  subjectId: {
+    type: Schema.Types.ObjectId,
+    ref: "Subject", // Assuming you have a Subject model
+    required: true,
+  },
   posts: [
     {
       type: Schema.Types.ObjectId, // Array of post IDs

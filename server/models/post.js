@@ -20,6 +20,7 @@ const postSchema = new Schema(
     topicId: {
       type: Schema.Types.ObjectId,
       ref: "Topic", // Assuming you have a Topic model
+      required: true,
     },
     title: {
       type: String,
@@ -27,7 +28,7 @@ const postSchema = new Schema(
     },
     grade: {
       type: String,
-      enum: ["undergrad", "senior_high", "high_school", "middle_school"],
+      enum: ["undergraduate", "senior_high", "high_school", "middle_school"],
       required: true,
     },
     textContent: {

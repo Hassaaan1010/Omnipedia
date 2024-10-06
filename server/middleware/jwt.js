@@ -19,8 +19,11 @@ export const createJwtToken = async (user) => {
   });
   console.log(token);
   return token;
+};
 
-  // Continuous token refreshing
+// export const verifyToken = async;
+/*
+// Continuous token refreshing
   {
     //   On successful login, return both an access token and a refresh token.
     const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -44,6 +47,4 @@ export const createJwtToken = async (user) => {
     //   Frontend Handling: On the frontend, before making requests, check if the access token is still
     //   valid and refresh it if necessary.
   }
-};
-
-// export const verifyToken = async;
+*/
