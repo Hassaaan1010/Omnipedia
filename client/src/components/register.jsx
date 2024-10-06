@@ -31,6 +31,7 @@ const Register = () => {
     try {
       // await backend to approve login
       const res = await axios.post("http://localhost:4000/register/", userData);
+      console.log("user registered successfully");
       //store response token, userId, username on client
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userId", res.data._id);

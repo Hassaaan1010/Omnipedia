@@ -1,6 +1,6 @@
 import express from "express";
 import { createSubject } from "../data/subject_data.js";
-import { sendErrResp } from "../utils/errorHandling.js";
+import { badRequestErr, sendErrResp } from "../utils/errorHandling.js";
 import { apiLimiter } from "../middleware/rateLimiter.js";
 import { authorizeToken } from "../middleware/jwtAuthorizer.js";
 
@@ -15,24 +15,31 @@ router
     try {
       // called by createSubject subjects/create on client
       console.log(req.body);
-      const { userId, subjectName, topics } = req.body;
+      let { userId, subjectName, topics } = req.body;
+      // topics is in string format '[]'
+      if (topics) {
+        topics = JSON.parse(topics);
+      }
+      console.log(typeof subjectName);
 
+      console.log(userId, subjectName, topics);
       // validate input
       switch (true) {
-        case !userId | !subjectName | !topics:
+        case !userId || !subjectName || !topics:
           throw badRequestErr("Fields can not be left empty");
         case !nameRegex.test(subjectName):
           throw badRequestErr("Invalid subject name");
+
         default:
           break;
       }
-
       // create subject and topics
-      const subejctObject = await createSubject(userId, subjectName, topics);
+      const message = await createSubject(userId, subjectName, topics);
 
-      res.status(201).json(subejctObject);
+      return res.status(201).json({ message: message });
     } catch (error) {
-      sendErrResp(res);
+      console.log(error);
+      sendErrResp(res, { status: error.status, message: error.message });
     }
   });
 

@@ -63,11 +63,34 @@ const CreateSubject = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // You can process subjectName and topics here
     console.log("Subject Name:", subjectName);
     console.log("Topics:", topics);
+
+    try {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
+      const res = await axios.post(
+        "http://localhost:4000/subjects",
+        {
+          Authorization: `Bearer ${token}`,
+        },
+        {
+          userId: userId,
+          subjectName: subjectName,
+          topics: topics,
+        }
+      );
+      if (res.status) {
+        console.log("subject created successfully");
+      }
+    } catch (error) {
+      if (error.res?.status != 201) {
+        console.log("");
+      }
+    }
   };
 
   return (
