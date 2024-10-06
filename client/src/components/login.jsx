@@ -19,23 +19,27 @@ const Login = () => {
     } else {
       localStorage.clear();
     }
-  });
+  }, []);
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (userData) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("data being sent:", userData);
     try {
-      const res = await axios.post("http:/localhost:4000/login/", userData);
-      localStorage.setItem("payload", res.data.token);
-      localStorage.setItem("userId", res.data._id);
+      const res = await axios.post("http://localhost:4000/login/", userData);
+      console.log("idhar aya", res.data);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("userId", res.data.userId);
       localStorage.setItem("username", res.data.username);
+      console.log("token : ", localStorage.getItem("token"));
       navigate("/home");
       // continue here
     } catch (error) {
       if (error.response?.status != 200) {
-        console.log("yahan: ", error);
+        console.log("yahan: ", error.message);
         setErrorMessage(
           error.response?.data?.message || "An error occured. Please try again."
         );
