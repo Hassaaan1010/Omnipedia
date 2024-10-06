@@ -7,7 +7,6 @@ const Subjects = () => {
       <button>
         <Link to="/subjects/create">Creat a Subject</Link>
       </button>
-      useEffect({}, []);
       <div className="container">
         <ul>
           <div>

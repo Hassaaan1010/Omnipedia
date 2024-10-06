@@ -4,11 +4,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { tokenValid } from "../utils/tokenValidation";
+import { useNavigate, Link } from "react-router-dom";
 
 const Home = () => {
   const [search, setSearch] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [tokenAuthorized, setTokenAuthorized] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -16,23 +18,34 @@ const Home = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (tokenValid(token)) {
-      // cannot async/await useEffect. Create internal async function
-      async function checkTokenAuthorization() {
-        const res = await axios.get("http://localhost:4000/home/", {
-          headers: {
-            Authorization: `bearer ${token}`,
-          },
-        });
-        setTokenAuthorized(res.data.authorized);
-      }
 
-      checkTokenAuthorization();
+    if (token && tokenValid(token)) {
+      const checkAuthorization = async () => {
+        try {
+          const res = await axios.get("http://localhost:4000/home/", {
+            headers: {
+              Authorization: `Bearer ${token}`, // Correct Authorization header
+            },
+          });
+
+          if (res.data.authorized) {
+            console.log("auth :", res.data.authorized);
+            // navigate("/login"); // Redirect to login if not authorized
+            setTokenAuthorized(true);
+          }
+        } catch (error) {
+          console.error("Error during authorization check:", error);
+          navigate("/login"); // Redirect to login on any error
+        }
+      };
+
+      checkAuthorization();
     } else {
+      // navigate("/login"); // Redirect to login if the token is invalid
       localStorage.clear();
-      nav;
+      // continue on page
     }
-  }, []);
+  }, [navigate]); // Add navigate as a dependency
 
   return (
     <>
@@ -85,10 +98,10 @@ const Home = () => {
             ) : (
               <div className="text-end" name="Profile/LoginAndSignup">
                 <button type="button" className="btn btn-outline-light me-2">
-                  Login
+                  <Link to="/login">Login</Link>
                 </button>
                 <button type="button" className="btn btn-warning">
-                  Sign-up
+                  <Link to="/register">Register</Link>
                 </button>
               </div> // Show login/signup message if no token is found
             )}

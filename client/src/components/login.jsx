@@ -13,13 +13,30 @@ const Login = () => {
 
   // check if already logged in and has valid token. If token expired, clear localStorage
   useEffect(() => {
-    const availableToken = localStorage.getItem("token");
-    if (availableToken && tokenValid(availableToken)) {
-      navigate("/home");
-    } else {
-      localStorage.clear();
+    const token = localStorage.getItem("token");
+    if (token && tokenValid(token)) {
+      const checkAuthorization = async () => {
+        try {
+          const res = await axios.get("http://localhost:4000/login/", {
+            headers: {
+              Authorization: `Bearer ${token}`, // Correct Authorization header
+            },
+          });
+
+          if (res.data.authorized) {
+            navigate("/home"); // Redirect to home if  authorized
+          } else {
+            localStorage.clear();
+          }
+        } catch (error) {
+          console.error("Error during authorization check:", error);
+          navigate("/login"); // Redirect to login on any error
+        }
+      };
+
+      checkAuthorization();
     }
-  }, []);
+  }, [navigate]); // Add navigate as a dependency
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });

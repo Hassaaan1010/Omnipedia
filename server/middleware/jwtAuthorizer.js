@@ -16,19 +16,24 @@ dotenv.config();
  */
 
 export const authorizeToken = (req, res, next) => {
-  console.log(req.headers);
   const token = req.headers.authorization;
   const tokenPart = token && token.split(" ")[1];
-  console.log(tokenPart);
+
   if (!tokenPart) {
     return res.status(400).json({ error: "No token provided" });
   }
 
   jwt.verify(tokenPart, process.env.JWT_SECRET, (error, decoded) => {
     if (error) {
-      console.log(decoded);
-      console.log(error);
-      return res.status(401).json({ error: "Failed to authenticate token" });
+      if (error.message === "jwt expired") {
+        return res
+          .status(401)
+          .json({ error: "JWT token expired", authorized: false });
+      }
+      console.log(error.message);
+      return res
+        .status(401)
+        .json({ error: "Failed to authenticate token", authorized: false });
     }
     req.userId = decoded.id;
     next();

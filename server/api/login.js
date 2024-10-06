@@ -2,6 +2,7 @@ import express from "express";
 import { authenticateUser, getUserByEmail } from "../data/user_data.js";
 import { createJwtToken } from "../middleware/jwt.js";
 import { apiLimiter } from "../middleware/rateLimiter.js";
+import { authorizeToken } from "../middleware/jwtAuthorizer.js";
 import {
   badRequestErr, //400
   unauthorizedErr, //401
@@ -16,9 +17,16 @@ const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 router
-  .get("/", apiLimiter, (req, res) => {
-    console.log(req.body);
-    res.send("Login route reached.");
+  .get("/", apiLimiter, authorizeToken, async (req, res) => {
+    try {
+      console.log("reached login get");
+      res.status(200).json({ authorized: true });
+    } catch (error) {
+      sendErrResp(res, {
+        status: "500",
+        message: "Token authorization failed.",
+      });
+    }
   })
 
   .post("/", apiLimiter, async (req, res) => {

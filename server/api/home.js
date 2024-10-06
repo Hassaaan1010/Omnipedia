@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.get("/", apiLimiter, authorizeToken, async (req, res) => {
   try {
+    console.log("reached home get");
     res.status(200).json({ authorized: true });
   } catch (error) {
     sendErrResp(res, { status: "500", message: "Token authorization failed." });
