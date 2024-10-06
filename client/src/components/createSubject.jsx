@@ -7,6 +7,10 @@ import axios from "axios";
 const CreateSubject = () => {
   const [subjectName, setSubjectName] = useState("");
   const [topics, setTopics] = useState([""]); // Initialize with one empty input
+  const [message, setMessage] = useState("");
+  const [messageStyle, setMessageStyle] = useState({
+    color: "",
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -73,23 +77,25 @@ const CreateSubject = () => {
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("userId");
       const res = await axios.post(
-        "http://localhost:4000/subjects",
-        {
-          Authorization: `Bearer ${token}`,
-        },
+        "http://localhost:4000/subjects/create",
         {
           userId: userId,
           subjectName: subjectName,
           topics: topics,
+        },
+        {
+          Authorization: `Bearer ${token}`,
         }
       );
-      if (res.status) {
+      if (res.status === 201) {
+        setMessageStyle({ color: "green" });
+        setMessage("Subject created successfully");
         console.log("subject created successfully");
       }
     } catch (error) {
-      if (error.res?.status != 201) {
-        console.log("");
-      }
+      setMessageStyle({ color: "red" });
+      setMessage("Error : " + error?.response?.data?.message);
+      console.log("Error in subject creation.", error.response.data.message);
     }
   };
 
@@ -110,6 +116,7 @@ const CreateSubject = () => {
         </div>
         <div>
           <h4>Topics:</h4>
+          <p>Example: Thermodynamics MC_203</p>
           {topics.map((topic, index) => (
             <div key={index}>
               <input
@@ -129,6 +136,7 @@ const CreateSubject = () => {
         </div>
         <button type="submit">Create Subject</button>
       </form>
+      <p style={messageStyle}>{message}</p>
     </>
   );
 };

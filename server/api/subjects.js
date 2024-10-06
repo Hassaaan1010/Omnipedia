@@ -17,7 +17,7 @@ router
       console.log(req.body);
       let { userId, subjectName, topics } = req.body;
       // topics is in string format '[]'
-      if (topics) {
+      if (typeof topics === "string") {
         topics = JSON.parse(topics);
       }
       console.log(typeof subjectName);
