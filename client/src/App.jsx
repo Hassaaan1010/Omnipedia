@@ -8,6 +8,7 @@ import Login from "./components/login";
 import Home from "./components/home";
 import Subjects from "./components/subjects";
 import CreateSubject from "./components/createSubject";
+import Subject from "./components/subject";
 import "./App.css";
 
 // error handlers
@@ -24,6 +25,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/subject/:id" element={<Subject />} />
             <Route path="/subjects" element={<Subjects />} />
             <Route path="/subjects/create" element={<CreateSubject />} />
 

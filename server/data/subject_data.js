@@ -1,4 +1,5 @@
 import Subject from "../models/subject.js";
+import User from "../models/user.js";
 import Topic from "../models/topic.js";
 import { badRequestErr } from "../utils/errorHandling.js";
 
@@ -36,6 +37,15 @@ export const createSubject = async (userId, subjectName, topics) => {
       name: topicName,
       subjectId: savedSubject._id,
     }));
+
+    // to user object, add new subjectId to the mySubejcts array
+    const fetchedUser = await User.findOne({ _id: userId });
+    console.log("debug: ", fetchedUser);
+    console.log("debug 2: ", typeof fetchedUser);
+    fetchedUser.mySubjects = [...fetchedUser.mySubjects, savedSubject._id];
+
+    // update user
+    await fetchedUser.save();
 
     // create topics in db
     const createdTopics = await Topic.insertMany(topicDocs);

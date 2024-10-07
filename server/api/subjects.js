@@ -8,7 +8,8 @@ const router = express.Router();
 const nameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*(\s+[a-zA-Z_][a-zA-Z0-9_]*)*$/;
 
 router
-  .get("/", apiLimiter, authorizeToken, (req, res) => {
+  .get("/create", apiLimiter, authorizeToken, (req, res) => {
+    console.log("reached sub/create");
     res.status(200).json({ authorized: true });
   })
   .post("/create", async (req, res) => {
@@ -41,6 +42,11 @@ router
       console.log(error);
       sendErrResp(res, { status: error.status, message: error.message });
     }
+  })
+
+  .get("/:id", (req, res) => {
+    const subject_id = req.params.id;
+    console.log("idhar");
   });
 
 export default router;

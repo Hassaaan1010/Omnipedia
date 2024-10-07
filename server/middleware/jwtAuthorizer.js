@@ -20,7 +20,9 @@ export const authorizeToken = (req, res, next) => {
   const tokenPart = token && token.split(" ")[1];
 
   if (!tokenPart) {
-    return res.status(400).json({ error: "No token provided" });
+    return res
+      .status(400)
+      .json({ error: "No token provided", authorized: false });
   }
 
   jwt.verify(tokenPart, process.env.JWT_SECRET, (error, decoded) => {

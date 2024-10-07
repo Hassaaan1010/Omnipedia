@@ -19,7 +19,7 @@ const CreateSubject = () => {
     if (token && tokenValid(token)) {
       const checkAuthorization = async () => {
         try {
-          const res = await axios.get("http://localhost:4000/subjects/", {
+          const res = await axios.get("http://localhost:4000/subjects/create", {
             headers: {
               Authorization: `Bearer ${token}`, // Correct Authorization header
             },
