@@ -9,8 +9,9 @@ const Subject = () => {
   const token = localStorage.getItem("token");
   const [tokenAuthorized, setTokenAuthorized] = useState(false);
   const [response, setResponse] = useState({
-    subjectName: "", // Corrected spelling here
+    subjectName: "",
     topics: [],
+    omniposts: [],
     owner: false,
   });
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const Subject = () => {
         // sending request to get subject. also find out if the user is the creator of the subject
         const res = await axios.get(`http://localhost:4000/subjects/${id}`, {
           headers: {
-            userId: localStorage.getItem("userId"), // Moved userId to headers
+            userId: localStorage.getItem("userId"),
           },
         });
 
@@ -29,13 +30,26 @@ const Subject = () => {
 
         // find out names of all topics
         setResponse({
-          subjectName: res.data.subject.name, // Use res.data
-          topics: res.data.fetchedTopics, // Use res.data
-          owner: res.data.owner, // Use res.data
+          subjectName: res.data.subject.name,
+          topics: res.data.fetchedTopics,
+          omniposts: res.data.fetchedOmniposts,
+          omniposts: [
+            {
+              _id: "67043da259b81b2392d5fdd5",
+              title: "Khanacademy",
+            },
+            {
+              _id: "67043da259b81b2392d5fdd6",
+              title: "Apni Kaksha",
+            },
+          ],
+
+          owner: res.data.owner,
         });
         console.log(
           res.data.subject.name,
           res.data.fetchedTopics,
+          res.data.fetchedOmniposts,
           res.data.owner
         );
       } catch (error) {
@@ -74,7 +88,7 @@ const Subject = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar tokenAuthorized={true} />
       <h1>{response.subjectName}</h1>
       <div>
         <h2>Topics</h2>
@@ -93,8 +107,39 @@ const Subject = () => {
             )
           )}
         </ul>
+        {response.owner && (
+          <button>
+            <Link to={`http://localhost:5173/topics/add/${id}/`}>
+              Add Topics
+            </Link>
+          </button>
+        )}{" "}
       </div>
-      {response.owner && <h3>Add Topics Button</h3>}{" "}
+      <div>
+        <h2>Omniposts</h2>
+        <ul>
+          {response.omniposts.map(
+            (
+              omnipostObject // Use map instead of forEach
+            ) => (
+              <li key={omnipostObject._id}>
+                {" "}
+                {/* Provide a unique key */}
+                <Link
+                  to={`http://localhost:5173/omniposts/${omnipostObject._id}`}
+                >
+                  {omnipostObject.title}
+                </Link>
+              </li>
+            )
+          )}
+        </ul>
+        <button>
+          <Link to={`http://localhost:5173/omniposts/create/`}>
+            Create Omnipost
+          </Link>
+        </button>
+      </div>
       {/* Conditional rendering */}
     </>
   );

@@ -5,6 +5,7 @@ import { apiLimiter } from "../middleware/rateLimiter.js";
 import { authorizeToken } from "../middleware/jwtAuthorizer.js";
 import Subject from "../models/subject.js";
 import Topic from "../models/topic.js";
+import OmniPost from "../models/omnipost.js";
 
 const router = express.Router();
 const nameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*(\s+[a-zA-Z_][a-zA-Z0-9_]*)*$/;
@@ -48,7 +49,7 @@ router
 
   .get("/:id", apiLimiter, async (req, res) => {
     const subjectId = req.params.id;
-    const requesterId = req.headers.userId;
+    const requesterId = req.headers.userid;
 
     let owner = false;
     // the subject item is enough to render the subject/:id page
@@ -57,8 +58,8 @@ router
     try {
       // we have to get the subject of id subject_id and return two items, Owner flag and subject item.
       const fetchedSubject = await Subject.findOne({ _id: subjectId });
-
       const topicIds = fetchedSubject.topics;
+      const omnipostIds = fetchedSubject.omniposts;
 
       // fetch the list of topics that match the topic IDs
       const fetchedTopics = await Topic.find(
@@ -66,12 +67,22 @@ router
         "name"
       );
 
+      const fetchedOmniposts = await OmniPost.find(
+        {
+          _id: { $in: omnipostIds },
+        },
+        "title"
+      );
+      // console.log( "Res: ", fetchedSubject, fetchedTopics, fetched,);
       // the userId can be compared to requesterId and flag Owner.
       owner = requesterId === fetchedSubject.userId.toString();
 
-      res
-        .status(200)
-        .json({ subject: fetchedSubject, fetchedTopics, owner: owner });
+      res.status(200).json({
+        subject: fetchedSubject,
+        fetchedTopics: fetchedTopics,
+        fetchedOmniposts: fetchedOmniposts,
+        owner: owner,
+      });
     } catch {
       throw badRequestErr("Invalid subject");
     }
