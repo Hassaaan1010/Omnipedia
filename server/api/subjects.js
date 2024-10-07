@@ -3,6 +3,7 @@ import { createSubject } from "../data/subject_data.js";
 import { badRequestErr, sendErrResp } from "../utils/errorHandling.js";
 import { apiLimiter } from "../middleware/rateLimiter.js";
 import { authorizeToken } from "../middleware/jwtAuthorizer.js";
+import Subject from "../models/subject.js";
 
 const router = express.Router();
 const nameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*(\s+[a-zA-Z_][a-zA-Z0-9_]*)*$/;
@@ -44,9 +45,25 @@ router
     }
   })
 
-  .get("/:id", (req, res) => {
-    const subject_id = req.params.id;
-    console.log("idhar");
+  .get("/:id", apiLimiter, async (req, res) => {
+    const subjectId = req.params.id;
+    const requesterId = req.body.userId;
+
+    let owner = false;
+    // the subject item is enough to render the subject/:id page
+    // the topics id are links to the topics/:id components
+    // the omniposts are list of omni_posts that are to be rendered
+    try {
+      // we have to get the subject of id subject_id and return two items, Owner flag and subject item.
+      const fetchedSubject = await Subject.findOne({ _id: subjectId });
+
+      // the userId can be compared to requesterId and flag Owner.
+      owner = requesterId === fetchedSubject.userId.toString();
+
+      res.status(200).json({ subject: fetchedSubject, owner: owner });
+    } catch {
+      throw badRequestErr("Invalid subject");
+    }
   });
 
 export default router;
