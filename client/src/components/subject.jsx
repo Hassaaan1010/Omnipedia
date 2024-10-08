@@ -96,6 +96,7 @@ const Subject = () => {
   return (
     <>
       <Navbar authorized={tokenAuthorized} />
+      <h2>{response.subjectName}</h2>
       <Topics
         topics={response.topics}
         owner={response.owner}

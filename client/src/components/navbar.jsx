@@ -8,7 +8,6 @@ const Navbar = ({ authorized }) => {
     setSearchQuery(event.target.value);
   };
 
-  console.log("authorized is :", authorized);
   const handleSearch = (event) => {};
   return (
     <nav className="p-3 text-bg-dark">

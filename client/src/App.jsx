@@ -38,9 +38,11 @@ function App() {
             <Route path="/subject/:id" element={<Subject />} />
             {/* create subject */}
             <Route path="/subjects/create" element={<CreateSubject />} />
+
             <Route path="/posts" element={<Posts />} />
             <Route path="/post/:id" element={<Post />} />
             <Route path="/posts/create" element={<CreatePost />} />
+
             <Route path="/topic" element={<Topics />} />
             <Route path="/topics/:subjectId/:topicId" element={<Topic />} />
             {/* <Route path="/topics/create" element={} /> */}

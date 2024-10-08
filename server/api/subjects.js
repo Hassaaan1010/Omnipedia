@@ -15,11 +15,25 @@ const router = express.Router();
 const nameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*(\s+[a-zA-Z_][a-zA-Z0-9_]*)*$/;
 
 router
+  .get("/", apiLimiter, async (req, res) => {
+    console.log("request recieved at subjects/ get");
+
+    // fetch all subjects
+    const allSubjects = await Subject.find({});
+    console.log(allSubjects);
+
+    res.status(200).json({ subjects: allSubjects });
+
+    try {
+    } catch (error) {
+      sendErrResp(res, { status: error.status, message: error.message });
+    }
+  })
   .get("/create", apiLimiter, authorizeToken, (req, res) => {
     console.log("reached sub/create");
     res.status(200).json({ authorized: true });
   })
-  .post("/create", async (req, res) => {
+  .post("/create", apiLimiter, authorizeToken, async (req, res) => {
     try {
       // called by createSubject subjects/create on client
       console.log(req.body);
@@ -42,9 +56,9 @@ router
           break;
       }
       // create subject and topics
-      const message = await createSubject(userId, subjectName, topics);
+      const subjectId = await createSubject(userId, subjectName, topics);
 
-      return res.status(201).json({ message: message });
+      return res.status(201).json({ message: message, subjectId: subjectId });
     } catch (error) {
       console.log(error);
       sendErrResp(res, { status: error.status, message: error.message });

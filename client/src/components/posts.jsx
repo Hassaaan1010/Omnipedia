@@ -2,7 +2,7 @@ const Posts = ({ posts }) => {
   return (
     <>
       <h4>Posts List</h4>
-      <ul>
+      <div>
         {posts.map((post) => (
           <div key={post._id}>
             <li>
@@ -13,7 +13,7 @@ const Posts = ({ posts }) => {
             </li>
           </div>
         ))}
-      </ul>
+      </div>
     </>
   );
 };

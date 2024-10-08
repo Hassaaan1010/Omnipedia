@@ -91,6 +91,7 @@ const CreateSubject = () => {
         setMessageStyle({ color: "green" });
         setMessage("Subject created successfully");
         console.log("subject created successfully");
+        navigate(`/subject/${res.data.subjectId}`);
       }
     } catch (error) {
       setMessageStyle({ color: "red" });
