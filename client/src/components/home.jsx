@@ -13,10 +13,6 @@ const Home = () => {
   const [tokenAuthorized, setTokenAuthorized] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setSearch(e.target.value);
-  };
-
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -47,11 +43,7 @@ const Home = () => {
 
   return (
     <>
-      <Navbar
-        search={search}
-        handleChange={handleChange}
-        tokenAuthorized={tokenAuthorized}
-      />
+      <Navbar search={search} authorized={tokenAuthorized} />
       <ul>
         <li>followed subject 1</li>
         <li>followed subject 2</li>

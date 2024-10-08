@@ -1,6 +1,10 @@
 import express from "express";
 import { createSubject } from "../data/subject_data.js";
-import { badRequestErr, sendErrResp } from "../utils/errorHandling.js";
+import {
+  badRequestErr,
+  notFoundErr,
+  sendErrResp,
+} from "../utils/errorHandling.js";
 import { apiLimiter } from "../middleware/rateLimiter.js";
 import { authorizeToken } from "../middleware/jwtAuthorizer.js";
 import Subject from "../models/subject.js";
@@ -61,6 +65,10 @@ router
       const topicIds = fetchedSubject.topics;
       const omnipostIds = fetchedSubject.omniposts;
 
+      if (!fetchedSubject) {
+        throw notFoundErr("Subject Not Found");
+      }
+
       // fetch the list of topics that match the topic IDs
       const fetchedTopics = await Topic.find(
         { _id: { $in: topicIds } },
@@ -73,10 +81,11 @@ router
         },
         "title"
       );
-      // console.log( "Res: ", fetchedSubject, fetchedTopics, fetched,);
+
       // the userId can be compared to requesterId and flag Owner.
       owner = requesterId === fetchedSubject.userId.toString();
 
+      // llm_content will not show up in db req until it points to a valid post
       res.status(200).json({
         subject: fetchedSubject,
         fetchedTopics: fetchedTopics,
@@ -84,7 +93,7 @@ router
         owner: owner,
       });
     } catch {
-      throw badRequestErr("Invalid subject");
+      sendErrResp(res, { status: error.status, message: error.message });
     }
   });
 

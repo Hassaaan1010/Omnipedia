@@ -12,11 +12,11 @@ const postSchema = new Schema(
       ref: "User", // Reference to the User model
       required: true,
     },
-    subjectId: {
-      type: Schema.Types.ObjectId,
-      ref: "Subject", // Assuming you have a Subject model
-      required: true,
-    },
+    // subjectId: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "Subject", // Assuming you have a Subject model
+    //   required: true,
+    // },
     topicId: {
       type: Schema.Types.ObjectId,
       ref: "Topic", // Assuming you have a Topic model

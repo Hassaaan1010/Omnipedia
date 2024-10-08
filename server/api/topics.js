@@ -1,56 +1,58 @@
 import express from "express";
+import Topic from "../models/topic.js";
+import Post from "../models/post.js";
+import {
+  badRequestErr,
+  notFoundErr,
+  sendErrResp,
+} from "../utils/errorHandling.js";
 
 const router = express.Router();
 
 router
-  .get("/", (req, res) => {
-    res.send("Topics route reached.");
-  })
   .post("/", async (req, res) => {
     try {
-      // Define seed variables (example data)
-      const seedTopics = [
-        {
-          name: "Quantum Physics",
-          subjectId: "670103c5e4db1bfda5913301",
-          posts: [],
-          llm_content: null, // Assuming there's no associated LLM content at seeding
-        },
-        {
-          name: "Kinematics",
-          subjectId: "670103c5e4db1bfda5913301",
-          posts: [],
-          llm_content: null, // Assuming there's no associated LLM content at seeding
-        },
-        {
-          name: "Gravitation",
-          subjectId: "670103c5e4db1bfda5913301",
-          posts: [],
-          llm_content: null, // Assuming there's no associated LLM content at seeding
-        },
-        {
-          name: "Software Engineering",
-          subjectId: "670103c5e4db1bfda5913302",
-          posts: [],
-          llm_content: null, // Assuming there's no associated LLM content at seeding
-        },
-        {
-          name: "Web Development",
-          subjectId: "670103c5e4db1bfda5913302",
-          posts: [],
-          llm_content: null, // Assuming there's no associated LLM content at seeding
-        },
-      ];
-
-      // Create and save each topic
-      const createdTopics = await Topic.insertMany(seedTopics);
-      res.status(201).json({
-        message: "Topics created successfully",
-        topics: createdTopics,
-      });
+      console.log("reaced topic post route");
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Error creating topics", error });
+    }
+  })
+  .get("/:subjectId/:topicId", async (req, res) => {
+    console.log("topics/:id get request");
+    const { subjectId, topicId } = req.params;
+    console.log("params:", req.params);
+    console.log("header:", req.headers);
+    console.log(topicId);
+    try {
+      // Get the topic from Topics
+      if (topicId.length !== 24 || subjectId.length !== 24) {
+        throw badRequestErr("Invalid resource link.");
+      }
+
+      const fetchedTopic = await Topic.findOne({ _id: topicId });
+
+      if (!fetchedTopic) {
+        throw notFoundErr("Topic Not Found");
+      }
+
+      // Fetch the posts with only specific fields
+      const fetchedPosts = await Post.find(
+        { _id: { $in: fetchedTopic.posts } },
+        "likes dislikes title grade" // This is the projection: fields to return
+      );
+
+      // llm_content will not show up in db req until it points to a valid post
+      console.log(fetchedTopic);
+      console.log(fetchedPosts);
+
+      res.status(200).json({
+        topic: fetchedTopic,
+        posts: fetchedPosts,
+      });
+    } catch (error) {
+      console.log(error);
+      sendErrResp(res, { status: error.status, message: error.message });
     }
   });
 

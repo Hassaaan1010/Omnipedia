@@ -1,6 +1,15 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const Navbar = ({ search, handleChange, tokenAuthorized }) => {
+const Navbar = ({ authorized }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  console.log("authorized is :", authorized);
+  const handleSearch = (event) => {};
   return (
     <nav className="p-3 text-bg-dark">
       <div className="container">
@@ -33,11 +42,15 @@ const Navbar = ({ search, handleChange, tokenAuthorized }) => {
               className="form-control form-control-dark text-bg-dark"
               placeholder="Search a subject or topic..."
               aria-label="Search"
-              value={search}
+              value={searchQuery}
               onChange={handleChange}
             />
+            <button type="submit" onClick={handleSearch}>
+              Search
+            </button>
           </form>
-          {tokenAuthorized ? (
+
+          {authorized ? (
             <>
               <h4>Logout</h4>
               <h3>{localStorage.getItem("username")}</h3>

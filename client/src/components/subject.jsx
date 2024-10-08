@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { tokenValid } from "../utils/tokenValidation";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import Navbar from "./navbar";
+import Omniposts from "./omniposts";
+import Topics from "./topics";
 
 const Subject = () => {
   const { id } = useParams();
@@ -53,6 +55,9 @@ const Subject = () => {
           res.data.owner
         );
       } catch (error) {
+        if (error.status === 404) {
+          navigate("/NotFound");
+        }
         console.log("Error in get request.", error);
       }
     };
@@ -76,71 +81,31 @@ const Subject = () => {
           }
         } catch (error) {
           console.error("Error during authorization check:", error);
+          setTokenAuthorized(false);
           localStorage.clear();
         }
       };
 
       checkAuthorization();
     } else {
+      setTokenAuthorized(false);
       localStorage.clear();
     }
   }, [token]); // Add token as a dependency
 
   return (
     <>
-      <Navbar tokenAuthorized={true} />
-      <h1>{response.subjectName}</h1>
-      <div>
-        <h2>Topics</h2>
-        <ul>
-          {response.topics.map(
-            (
-              topicObject // Use map instead of forEach
-            ) => (
-              <li key={topicObject._id}>
-                {" "}
-                {/* Provide a unique key */}
-                <Link to={`http://localhost:5173/topic/${topicObject._id}`}>
-                  {topicObject.name}
-                </Link>
-              </li>
-            )
-          )}
-        </ul>
-        {response.owner && (
-          <button>
-            <Link to={`http://localhost:5173/topics/add/${id}/`}>
-              Add Topics
-            </Link>
-          </button>
-        )}{" "}
-      </div>
-      <div>
-        <h2>Omniposts</h2>
-        <ul>
-          {response.omniposts.map(
-            (
-              omnipostObject // Use map instead of forEach
-            ) => (
-              <li key={omnipostObject._id}>
-                {" "}
-                {/* Provide a unique key */}
-                <Link
-                  to={`http://localhost:5173/omniposts/${omnipostObject._id}`}
-                >
-                  {omnipostObject.title}
-                </Link>
-              </li>
-            )
-          )}
-        </ul>
-        <button>
-          <Link to={`http://localhost:5173/omniposts/create/`}>
-            Create Omnipost
-          </Link>
-        </button>
-      </div>
-      {/* Conditional rendering */}
+      <Navbar authorized={tokenAuthorized} />
+      <Topics
+        topics={response.topics}
+        owner={response.owner}
+        subjectId={id}
+        authorized={tokenAuthorized}
+      />
+      <Omniposts
+        omniposts={response.omniposts}
+        authorized={tokenAuthorized}
+      ></Omniposts>
     </>
   );
 };
