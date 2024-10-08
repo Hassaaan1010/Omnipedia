@@ -166,6 +166,7 @@ const PostForm = () => {
   const { topicId } = useParams(); // Extract topicId from URL parameters
   const userId = localStorage.getItem("userId"); // Get userId from localStorage
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     topicId: topicId, // Set topicId from URL params
     title: "",
@@ -220,6 +221,7 @@ const PostForm = () => {
       const subjectId = response.data.subjectId;
       //   navigate(`/topic/${subjectId}/${topicId}`);
     } catch (error) {
+      setErrorMessage(error?.response?.data?.message);
       console.error("Error creating post:", error);
     }
   };
@@ -278,6 +280,7 @@ const PostForm = () => {
             Add Link
           </button>
         </div>
+        <p style={{ color: "red" }}>{errorMessage}</p>
 
         <button type="submit">Create Post</button>
       </form>

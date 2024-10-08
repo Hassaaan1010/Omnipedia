@@ -3,6 +3,7 @@ import User from "../models/user.js";
 import { internalServerErr, badRequestErr } from "../utils/errorHandling.js";
 
 const linkRegex = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(:\d+)?(\/[^\s]*)?$/i;
+const nameRegex = /^[a-zA-Z_0-9][a-zA-Z0-9_]*(\s+[a-zA-Z_][a-zA-Z0-9_]*)*$/;
 
 const createPost = async (
   topicId,
@@ -16,18 +17,23 @@ const createPost = async (
     throw badRequestErr("Required fields unfilled");
   }
 
-  //   validate links
-  for (let i = 0; i < links.length; i++) {
-    if (linkRegex.test([i])) {
-      throw badRequestErr("Invalid link");
-    }
-  }
-
   //   trim title and links
   title = title.trim();
   links.forEach((element) => {
     return element.trim();
   });
+
+  if (!nameRegex.test(title)) {
+    throw badRequestErr("Improper title");
+  }
+
+  //   validate links
+  for (let i = 0; i < links.length; i++) {
+    if (!linkRegex.test(links[i])) {
+      throw badRequestErr("Invalid link");
+    }
+  }
+  console.log("validation done");
 
   //
   const newPost = new Post({
@@ -49,6 +55,7 @@ const createPost = async (
       { $push: { posts: savedPost._id } }, // Append the post ID to the user's posts array
       { new: true } // Return the updated document
     );
+
     console.log("upd user: ", updatedUser);
     return savedPost._id;
   } catch (error) {

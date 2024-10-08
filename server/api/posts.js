@@ -1,5 +1,5 @@
 import express from "express";
-import { badRequestErr } from "../utils/errorHandling.js";
+import { badRequestErr, sendErrResp } from "../utils/errorHandling.js";
 import { createPost } from "../data/post_data.js";
 
 const router = express.Router();
@@ -28,7 +28,7 @@ router
       res.status(200).json({ message: "Posts created successfully", postId });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Error creating posts", error });
+      sendErrResp(res, { status: error.status, message: error.message });
     }
   });
 
