@@ -219,7 +219,7 @@ const PostForm = () => {
       console.log("Post created successfully:", response.data);
       // Reset the form if needed
       const subjectId = response.data.subjectId;
-      //   navigate(`/topic/${subjectId}/${topicId}`);
+      navigate(`/posts/${response.data.postId}`);
     } catch (error) {
       setErrorMessage(error?.response?.data?.message);
       console.error("Error creating post:", error);
