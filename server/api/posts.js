@@ -1,6 +1,8 @@
 import express from "express";
 import { badRequestErr, sendErrResp } from "../utils/errorHandling.js";
 import { createPost } from "../data/post_data.js";
+import { apiLimiter } from "../middleware/rateLimiter.js";
+import { authorizeToken } from "../middleware/jwtAuthorizer.js";
 
 const router = express.Router();
 
@@ -10,7 +12,10 @@ router
   .get("/", async (req, res) => {
     res.send("Posts get route reached.");
   })
-  .post("/", async (req, res) => {
+  .get("/:id", apiLimiter, async (req, res) => {
+    res.send("posts get /:id route reached");
+  })
+  .post("/", apiLimiter, authorizeToken, async (req, res) => {
     try {
       console.log(req.body);
       let { links, data, userId } = req.body;

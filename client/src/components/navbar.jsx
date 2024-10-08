@@ -42,9 +42,15 @@ const Navbar = ({ authorized }) => {
               placeholder="Search a subject or topic..."
               aria-label="Search"
               value={searchQuery}
+              style={{ height: "30px" }}
               onChange={handleChange}
             />
-            <button type="submit" onClick={handleSearch}>
+            {"  "}
+            <button
+              type="submit"
+              style={{ height: "40px" }}
+              onClick={handleSearch}
+            >
               Search
             </button>
           </form>

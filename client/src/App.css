@@ -40,3 +40,18 @@
 .read-the-docs {
   color: #888;
 }
+
+.upvote.active {
+  color: green;
+}
+
+.downvote.active {
+  color: red;
+}
+
+.upvote,
+.downvote {
+  font-size: 30px;
+  margin-right: 10px;
+  cursor: pointer;
+}

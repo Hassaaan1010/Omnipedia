@@ -20,6 +20,8 @@ import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Topics from "./components/topics";
 import Topic from "./components/topic";
+import ViewPost from "./components/viewPost";
+import NotFoundPage from "./components/notFound";
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -40,13 +42,14 @@ function App() {
             <Route path="/subjects/create" element={<CreateSubject />} />
 
             <Route path="/posts" element={<Posts />} />
-            <Route path="/post/:id" element={<Post />} />
+            <Route path="/post/:id" element={<ViewPost />} />
             <Route path="/posts/create/:topicId" element={<CreatePost />} />
 
             <Route path="/topic" element={<Topics />} />
             <Route path="/topic/:subjectId/:topicId" element={<Topic />} />
+            <Route path="/notFound" element={NotFoundPage} />
             {/* <Route path="/topics/create" element={} /> */}
-            {/* <Route path="*" element={<Navigate replace to="/login" />} /> */}
+            <Route path="*" element={<Navigate replace to="/login" />} />
           </Routes>
         </div>
       </BrowserRouter>
