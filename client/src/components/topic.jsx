@@ -21,6 +21,7 @@ const Topic = () => {
   // Fetch topic data
   useEffect(() => {
     const getPage = async () => {
+      console.log("Reached topic page");
       try {
         const res = await axios.get(
           `http://localhost:4000/topics/${subjectId}/${topicId}`
@@ -105,6 +106,11 @@ const Topic = () => {
       </button>
       <h3>{response.topicName.toUpperCase()}</h3>
       <Posts posts={response.posts} />
+      <button>
+        <Link to={`http://localhost:5173/posts/create/${topicId}`}>
+          Create Post
+        </Link>
+      </button>
     </>
   );
 };

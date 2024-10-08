@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { tokenValid } from "../utils/tokenValidation";
 import axios from "axios";
+import Navbar from "./navbar";
 
 const CreateSubject = () => {
   const [subjectName, setSubjectName] = useState("");
@@ -12,38 +13,70 @@ const CreateSubject = () => {
     color: "",
   });
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const [tokenAuthorized, setTokenAuthorized] = useState(false);
 
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+
+  //   if (token && tokenValid(token)) {
+  //     const checkAuthorization = async () => {
+  //       try {
+  //         const res = await axios.get("http://localhost:4000/subjects/create", {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`, // Correct Authorization header
+  //           },
+  //         });
+
+  //         if (!res.data.authorized) {
+  //           console.log("auth :", res.data.authorized);
+  //           navigate("/login"); // Redirect to login if not authorized
+  //         }
+  //       } catch (error) {
+  //         console.error("Error during authorization check:", error);
+  //         navigate("/login"); // Redirect to login on any error
+  //       }
+  //     };
+
+  //     checkAuthorization();
+  //   } else {
+  //     localStorage.clear();
+  //     navigate("/login"); // Redirect to login if the token is invalid
+  //     // continue on page
+  //   }
+  // }, [navigate]); // Add navigate as a dependency
+
+  // Handle input changes for subject name
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token && tokenValid(token)) {
-      const checkAuthorization = async () => {
+    const checkAuthorization = async () => {
+      if (token && tokenValid(token)) {
         try {
-          const res = await axios.get("http://localhost:4000/subjects/create", {
+          const res = await axios.get("http://localhost:4000/home/", {
             headers: {
-              Authorization: `Bearer ${token}`, // Correct Authorization header
+              Authorization: `Bearer ${token}`,
             },
           });
 
-          if (!res.data.authorized) {
-            console.log("auth :", res.data.authorized);
-            navigate("/login"); // Redirect to login if not authorized
+          if (res.data.authorized) {
+            setTokenAuthorized(true); // Set true if authorized
+          } else {
+            setTokenAuthorized(false); // Not authorized
+            localStorage.clear(); // Clear local storage if not authorized
           }
         } catch (error) {
           console.error("Error during authorization check:", error);
-          navigate("/login"); // Redirect to login on any error
+          setTokenAuthorized(false);
+          localStorage.clear();
         }
-      };
+      } else {
+        setTokenAuthorized(false); // Token is invalid or not present
+        localStorage.clear();
+      }
+    };
 
-      checkAuthorization();
-    } else {
-      localStorage.clear();
-      navigate("/login"); // Redirect to login if the token is invalid
-      // continue on page
-    }
-  }, [navigate]); // Add navigate as a dependency
+    checkAuthorization();
+  }, [token]); // Only depend on token
 
-  // Handle input changes for subject name
   const handleSubjectNameChange = (e) => {
     setSubjectName(e.target.value);
   };
@@ -102,6 +135,7 @@ const CreateSubject = () => {
 
   return (
     <>
+      <Navbar authorized={tokenAuthorized}></Navbar>
       <Link to="\home">Back</Link>
       <form onSubmit={handleSubmit}>
         <div>

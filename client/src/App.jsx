@@ -41,12 +41,12 @@ function App() {
 
             <Route path="/posts" element={<Posts />} />
             <Route path="/post/:id" element={<Post />} />
-            <Route path="/posts/create" element={<CreatePost />} />
+            <Route path="/posts/create/:topicId" element={<CreatePost />} />
 
             <Route path="/topic" element={<Topics />} />
-            <Route path="/topics/:subjectId/:topicId" element={<Topic />} />
+            <Route path="/topic/:subjectId/:topicId" element={<Topic />} />
             {/* <Route path="/topics/create" element={} /> */}
-            <Route path="*" element={<Navigate replace to="/login" />} />
+            {/* <Route path="*" element={<Navigate replace to="/login" />} /> */}
           </Routes>
         </div>
       </BrowserRouter>

@@ -51,7 +51,9 @@ const Navbar = ({ authorized }) => {
 
           {authorized ? (
             <>
-              <h4>Logout</h4>
+              <button type="button" className="btn btn-outline-light me-2">
+                <Link to="/logout">Logout</Link>
+              </button>
               <h3>{localStorage.getItem("username")}</h3>
             </>
           ) : (

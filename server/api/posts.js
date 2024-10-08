@@ -1,62 +1,35 @@
 import express from "express";
+import { badRequestErr } from "../utils/errorHandling.js";
+import { createPost } from "../data/post_data.js";
 
 const router = express.Router();
 
+const linkRegex = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(:\d+)?(\/[^\s]*)?$/i;
+
 router
-  .get("/", (req, res) => {
-    res.send("Posts route reached.");
+  .get("/", async (req, res) => {
+    res.send("Posts get route reached.");
   })
-  .post("/", (req, res) => {
-    const express = require("express");
-    const router = express.Router();
-    const Post = require("./models/Post"); // Adjust the path according to your structure
+  .post("/", async (req, res) => {
+    try {
+      console.log(req.body);
+      let { links, data, userId } = req.body;
+      let { topicId, title, grade, textContent } = data;
 
-    // GET route for posts
-    router.get("/", (req, res) => {
-      res.send("Posts route reached.");
-    });
+      const postId = await createPost(
+        topicId,
+        title,
+        grade,
+        textContent,
+        userId,
+        links
+      );
 
-    // POST route for seeding posts
-    router.post("/", async (req, res) => {
-      try {
-        // Define seed variables (example data)
-        const seedPosts = [
-          {
-            userId: "60c72b2f9b1d5c0015f645f7", // Replace with actual user ID
-            subjectId: "60c72b2f9b1d5c0015f645f8", // Replace with actual subject ID
-            topicId: "60c72b2f9b1d5c0015f645f9", // Replace with actual topic ID
-            title: "Understanding Quantum Mechanics",
-            grade: "undergrad",
-            textContent:
-              "This post discusses the principles of quantum mechanics...",
-            linkUrls: [
-              "http://example.com/quantum",
-              "http://example.com/physics",
-            ],
-            files: [],
-          },
-          {
-            userId: "60c72b2f9b1d5c0015f645f7", // Replace with actual user ID
-            subjectId: "60c72b2f9b1d5c0015f645f8", // Replace with actual subject ID
-            topicId: "60c72b2f9b1d5c0015f645f9", // Replace with actual topic ID
-            title: "Introduction to Linear Algebra",
-            grade: "senior_high",
-            textContent: "This post covers the basics of linear algebra...",
-            linkUrls: ["http://example.com/algebra"],
-            files: [],
-          },
-        ];
-
-        // Create and save each post
-        const createdPosts = await Post.insertMany(seedPosts);
-        res
-          .status(201)
-          .json({ message: "Posts created successfully", posts: createdPosts });
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Error creating posts", error });
-      }
-    });
+      res.status(200).json({ message: "Posts created successfully", postId });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error creating posts", error });
+    }
   });
 
 export default router;
