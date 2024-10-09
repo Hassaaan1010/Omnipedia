@@ -163,6 +163,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 const PostForm = () => {
+  const token = localStorage.getItem("token");
   const { topicId } = useParams(); // Extract topicId from URL parameters
   const userId = localStorage.getItem("userId"); // Get userId from localStorage
   const navigate = useNavigate();
@@ -211,17 +212,27 @@ const PostForm = () => {
     // links.forEach((link) => data.append("linkUrls", link));
 
     try {
-      const response = await axios.post("http://localhost:4000/posts/", {
-        links: links,
-        data: formData,
-        userId: userId,
-      });
+      const response = await axios.post(
+        "http://localhost:4000/posts/",
+        {
+          links: links,
+          data: formData,
+          userId: userId,
+        },
+        {
+          headers: {
+            // Add this headers property
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log("Post created successfully:", response.data);
       // Reset the form if needed
       const subjectId = response.data.subjectId;
       navigate(`/posts/${response.data.postId}`);
     } catch (error) {
       setErrorMessage(error?.response?.data?.message);
+
       console.error("Error creating post:", error);
     }
   };

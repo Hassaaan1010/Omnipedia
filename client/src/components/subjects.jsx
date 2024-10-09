@@ -4,17 +4,18 @@ import { useState, useEffect } from "react";
 
 const Subjects = ({ userId }) => {
   const [response, setResponse] = useState({
-    followedSubjects: null,
+    followedSubjects: [],
   });
 
   useEffect(() => {
     try {
       const getSubjects = async () => {
+        console.log("userid", userId);
         const res = await axios.get(
           `http://localhost:4000/subjects/getFollowing/${userId}`
         );
         console.log("resp : ", res.data);
-        setResponse({ followedSubjects: [res.data.followedSubjects] });
+        setResponse({ followedSubjects: res.data.followedSubjects });
       };
       getSubjects();
     } catch (error) {
@@ -29,23 +30,22 @@ const Subjects = ({ userId }) => {
       <h2>Subjects</h2>
       <div className="container">
         <ul>
-          {response.followedSubjects &&
-            response.followedSubjects.map((subject) => {
-              return (
-                // Add return here
+          {response.followedSubjects.map((subject) => {
+            return (
+              // Add return here
 
-                <li key={subject._id}>
-                  <div>
-                    <Link to={`/subject/${subject._id}`}>{subject.name}</Link>
-                  </div>
-                </li>
-              );
-            })}
+              <li key={subject._id}>
+                <div>
+                  <Link to={`/subject/${subject._id}`}>{subject.name}</Link>
+                </div>
+              </li>
+            );
+          })}
           <div>
-            <li>Subject 2</li>
+            <li>Sample following Subject 1</li>
           </div>
           <div>
-            <li>Subject 3</li>
+            <li>Sample following Subject 2</li>
           </div>
         </ul>
       </div>

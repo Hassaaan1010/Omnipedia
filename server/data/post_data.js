@@ -1,4 +1,5 @@
 import Post from "../models/post.js";
+import Topic from "../models/topic.js";
 import User from "../models/user.js";
 import { internalServerErr, badRequestErr } from "../utils/errorHandling.js";
 
@@ -54,6 +55,12 @@ const createPost = async (
       userId,
       { $push: { posts: savedPost._id } }, // Append the post ID to the user's posts array
       { new: true } // Return the updated document
+    );
+
+    const updatedTopic = await Topic.findByIdAndUpdate(
+      topicId,
+      { $push: { posts: savedPost._id } },
+      { new: true }
     );
 
     console.log("upd user: ", updatedUser);

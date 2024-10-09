@@ -4,8 +4,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { tokenValid } from "../utils/tokenValidation";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Navbar from "./navbar";
+import Subjects from "./subjects";
 
 const Home = () => {
   const [search, setSearch] = useState("");
@@ -44,13 +45,18 @@ const Home = () => {
   return (
     <>
       <Navbar search={search} authorized={tokenAuthorized} />
-      <ul>
-        <li>followed subject 1</li>
-        <li>followed subject 2</li>
-        <li>followed subject 3</li>
-        <li>followed subject 4</li>
-        <li>followed subject 5</li>
-      </ul>
+      <li>
+        <Link
+          to={`http://localhost:5173/subject/${"67043da159b81b2392d5fdd1"}`}
+        >
+          Mathematics
+        </Link>
+      </li>
+      {tokenAuthorized ? (
+        <Subjects userId={localStorage.getItem("userId")}></Subjects>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

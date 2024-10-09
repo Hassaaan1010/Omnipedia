@@ -30,25 +30,7 @@ const Topic = () => {
         setResponse({
           subjectId: res.data.topic.subjectId,
           topicName: res.data.topic.name,
-          posts:
-            [
-              {
-                _id: "67043da259b81b2392d5fdd5",
-                title: "w3s Regex Python",
-                likes: ["user1", "user2", "user3"],
-                dislikes: ["user4", "user5"],
-                grade: ["undergraduate"],
-              },
-              {
-                _id: "67043da259b81b2392d5fdd6",
-                title: "mdn docs regex",
-                likes: ["user1", "user2", "user3"],
-                dislikes: [],
-                grade: ["undergraduate"],
-              },
-            ] ||
-            res.data.posts ||
-            [], // Use posts from the response
+          posts: res.data.posts, // Use posts from the response
           llm_content: res.data.llm_content || null, // Assuming llm_content might be part of data
         });
         console.log("response : ", response);

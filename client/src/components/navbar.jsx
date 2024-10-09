@@ -26,23 +26,27 @@ const Navbar = ({ authorized }) => {
               </Link>
             </li>
             {authorized ? (
-              <li>
-                <Link
-                  className="nav-link px-2 text-secondary"
-                  to="/subjects/create"
-                >
-                  Create a Subject
-                </Link>
-              </li>
+              <>
+                <li>
+                  <Link
+                    className="nav-link px-2 text-secondary"
+                    to="/subjects/create"
+                  >
+                    Create a Subject
+                  </Link>
+                </li>
+                {/* <li>
+                  <Link
+                    className="nav-link px-2 text-secondary"
+                    to={`/subjects/getFollowing/${localStorage.getItem(
+                      "userId"
+                    )}`}
+                  >
+                    Subjects
+                  </Link>
+                </li> */}
+              </>
             ) : null}
-            <li>
-              <Link
-                className="nav-link px-2 text-secondary"
-                to={`/subjects/${localStorage.getItem("userId")}`}
-              >
-                Subjects
-              </Link>
-            </li>
           </ul>
 
           <form

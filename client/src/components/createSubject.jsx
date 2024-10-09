@@ -62,15 +62,18 @@ const CreateSubject = () => {
           } else {
             setTokenAuthorized(false); // Not authorized
             localStorage.clear(); // Clear local storage if not authorized
+            navigate("/login");
           }
         } catch (error) {
           console.error("Error during authorization check:", error);
           setTokenAuthorized(false);
           localStorage.clear();
+          navigate("/login");
         }
       } else {
         setTokenAuthorized(false); // Token is invalid or not present
         localStorage.clear();
+        navigate("/login");
       }
     };
 
@@ -109,6 +112,7 @@ const CreateSubject = () => {
     try {
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("userId");
+      console.log(token);
       const res = await axios.post(
         "http://localhost:4000/subjects/create",
         {
@@ -117,19 +121,24 @@ const CreateSubject = () => {
           topics: topics,
         },
         {
-          Authorization: `Bearer ${token}`,
+          headers: {
+            // Add this headers property
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       if (res.status === 201) {
         setMessageStyle({ color: "green" });
         setMessage("Subject created successfully");
         console.log("subject created successfully");
+        console.log("response data : ", res.data);
+        console.log("subject id returned? :", res.data.subjectId);
         navigate(`/subject/${res.data.subjectId}`);
       }
     } catch (error) {
       setMessageStyle({ color: "red" });
       setMessage("Error : " + error?.response?.data?.message);
-      console.log("Error in subject creation.", error.response.data.message);
+      console.log("Error in subject creation.", error.toString());
     }
   };
 

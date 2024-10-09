@@ -36,10 +36,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/home" element={<Home />} />
             {/* page for list of subjects */}
-            {/* <Route
-              path="/subjects/getFollowing/:userId"
-              element={<Subjects />}
-            /> */}
+
             {/* singular subject view */}
             <Route path="/subject/:id" element={<Subject />} />
             {/* create subject */}
@@ -51,12 +48,12 @@ function App() {
 
             <Route path="/topic" element={<Topics />} />
             <Route path="/topic/:subjectId/:topicId" element={<Topic />} />
-            <Route path="/notFound" element={NotFoundPage} />
+            <Route path="/notFound" element={<NotFoundPage />} />
 
             <Route path="/profile/:id" element={<Profile />} />
 
             {/* <Route path="/topics/create" element={} /> */}
-            {/* <Route path="*" element={<Navigate replace to="/login" />} /> */}
+            <Route path="*" element={<Navigate replace to="/login" />} />
           </Routes>
         </div>
       </BrowserRouter>

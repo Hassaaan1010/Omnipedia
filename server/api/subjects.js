@@ -84,7 +84,12 @@ router
       // create subject and topics
       const subjectId = await createSubject(userId, subjectName, topics);
 
-      return res.status(201).json({ message: message, subjectId: subjectId });
+      return res
+        .status(201)
+        .json({
+          message: "Subject created successfully",
+          subjectId: subjectId,
+        });
     } catch (error) {
       console.log(error);
       sendErrResp(res, { status: error.status, message: error.message });
