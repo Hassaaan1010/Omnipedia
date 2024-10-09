@@ -260,10 +260,10 @@ const PostForm = () => {
             required
           >
             <option value="">Select grade</option>
+            <option value="graduate">Graduate</option>
             <option value="undergraduate">Undergraduate</option>
-            <option value="senior_high">Senior High</option>
-            <option value="high_school">High School</option>
-            <option value="middle_school">Middle School</option>
+            <option value="high school">High School</option>
+            <option value="middle school">Middle School</option>
           </select>
         </div>
         <div>

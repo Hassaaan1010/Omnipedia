@@ -19,10 +19,9 @@ router
     }
   })
   .get("/:subjectId/:topicId", async (req, res) => {
-    console.log("topics/:id get request");
+    console.log("topics/:subjectid/:topicid get request");
     const { subjectId, topicId } = req.params;
-    console.log("params:", req.params);
-    console.log("header:", req.headers);
+
     console.log(topicId);
     try {
       // Get the topic from Topics

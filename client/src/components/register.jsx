@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link, Navigate } from "react-router-dom";
+import { tokenValid } from "../utils/tokenValidation";
 
 const Register = () => {
   const navigate = useNavigate();

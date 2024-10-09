@@ -37,6 +37,13 @@ const userSchema = new Schema({
       default: [],
     },
   ],
+  omniposts: [
+    {
+      type: Schema.Types.ObjectId, // array of omnipost ids
+      ref: "Omnipost",
+      default: [],
+    },
+  ],
   folders: [
     {
       type: Schema.Types.ObjectId, // Array of folder IDs

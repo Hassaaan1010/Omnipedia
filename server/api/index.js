@@ -8,6 +8,7 @@ import foldersRouter from "./folders.js";
 import postsRouter from "./posts.js";
 import subjectsRouter from "./subjects.js";
 import topicsRouter from "./topics.js";
+import omnipostsRouter from "./omniposts.js";
 
 const routerNode = (app) => {
   app.use("/login", loginRouter);
@@ -17,6 +18,7 @@ const routerNode = (app) => {
   app.use("/users", usersRouter);
   app.use("/folders", foldersRouter);
   app.use("/posts", postsRouter);
+  app.use("/omniposts", omnipostsRouter);
   app.use("/subjects", subjectsRouter);
   app.use("/topics", topicsRouter);
 

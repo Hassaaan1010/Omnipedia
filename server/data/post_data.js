@@ -34,36 +34,33 @@ const createPost = async (
   }
   console.log("validation done");
 
-  //
+  console.log("links :", links);
   const newPost = new Post({
     userId: userId,
     topicId: topicId,
     title: title,
     grade: grade,
     textContent: textContent,
-    links: links,
+    linkUrls: links,
   });
   console.log(newPost);
 
-  // write post to db
+  //   // write post to db
   try {
     const savedPost = await newPost.save();
     console.log("saved post", savedPost);
-
     // update user posts
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $push: { posts: savedPost._id } }, // Append the post ID to the user's posts array
       { new: true } // Return the updated document
     );
-
     // update topic posts
     const updatedTopic = await Topic.findByIdAndUpdate(
       topicId,
       { $push: { posts: savedPost._id } },
       { new: true }
     );
-
     console.log("upd user: ", updatedUser);
     return [savedPost._id, updatedTopic.subjectId];
   } catch (error) {

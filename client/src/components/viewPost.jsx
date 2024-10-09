@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { tokenValid } from "../utils/tokenValidation";
 import Navbar from "./navbar";
 import VoteForm from "./voteForm";
@@ -10,27 +10,54 @@ import axios from "axios";
 const ViewPost = () => {
   const { id: postId } = useParams();
   const token = localStorage.getItem("token");
+  const requesterId = localStorage.getItem("userId");
   const [tokenAuthorized, setTokenAuthorized] = useState(false);
   const navigate = useNavigate();
-
-  const [post, _] = useState({
+  const [liked, setLiked] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+  const [post, setPost] = useState({
     title: "",
     userId: "",
     textContent: "",
     grade: "",
+    links: [],
     likes: [],
     dislikes: [],
   });
 
   useEffect(() => {
     try {
-      const getPost = async (params) => {
+      const getPost = async () => {
         const response = await axios.get(
-          `http://localhost:4000/posts/${postId}`
+          `http://localhost:4000/posts/${postId}`,
+          {
+            headers: {
+              userId: localStorage.getItem("userId"),
+            },
+          }
         );
-        const post = response.data;
+        const responsePost = response.data.post;
+        if (tokenAuthorized && requesterId in post.likes) {
+          // person liked post
+          setLiked(true);
+        } else if (tokenAuthorized && requesterId in post.dislikes) {
+          // person disliked post
+          setLiked(false);
+        } else {
+        }
+        setBookmarked(response.data.bookmarked);
+        setPost({
+          title: responsePost.title,
+          userId: responsePost.userId,
+          textContent: responsePost.textContent,
+          grade: responsePost.grade,
+          links: responsePost.linkUrls,
+          likes: responsePost.likes,
+          dislikes: responsePost.dislikes,
+        });
       };
       getPost();
+      console.log(post.links);
     } catch (error) {
       if (error.res?.status == 404) {
         navigate("/notFound");
@@ -38,7 +65,7 @@ const ViewPost = () => {
         console.log("Error : ", error.res?.data?.message);
       }
     }
-  });
+  }, [postId]);
 
   // authorization
   useEffect(() => {
@@ -69,23 +96,47 @@ const ViewPost = () => {
     }
   }, [token]); // Add token as a dependency
 
+  console.log("like: ", liked);
   return (
     <>
       <Navbar authorized={tokenAuthorized}></Navbar>
 
       <div>
-        <h2>Post : {}</h2>
-        <span>Author</span>
+        <h2>Post : {post.title}</h2>
+        <span>
+          <Link to={`http://localhost:5173/profile/${post.userId}`}>
+            Author
+          </Link>
+        </span>
         <br />
-        <span>Grade</span>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. A, earum
-          amet. Molestiae possimus placeat nihil nesciunt deserunt. Repellat
-          quae, eius recusandae odio nobis assumenda ipsam, et explicabo beatae
-          non corporis.
-        </p>
-        <VoteForm></VoteForm>
-        <BookmarkButton></BookmarkButton>
+        <span>Grade : {post.grade}</span>
+        <p>Content: {post.textContent}</p>
+        <div className="Links">
+          {post.links.map((link, i) => {
+            return (
+              <li key={i}>
+                <h4>
+                  <Link to={link}>{link}</Link>
+                </h4>
+              </li>
+            );
+          })}
+        </div>
+        {tokenAuthorized ? (
+          <>
+            <VoteForm
+              authorized={tokenAuthorized}
+              userId={requesterId}
+              postId={postId}
+              liked={liked}
+              likes={post.likes}
+              dislikes={post.dislikes}
+            ></VoteForm>
+            <BookmarkButton bookmarked={bookmarked}></BookmarkButton>
+          </>
+        ) : (
+          <></>
+        )}
       </div>
     </>
   );

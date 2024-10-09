@@ -58,7 +58,7 @@ router
         _id: { $in: followedIds },
       });
 
-      console.log(followedSubjects);
+      // console.log(followedSubjects);
       res.status(200).json({ followedSubjects });
     } catch (error) {
       sendErrResp(res, { status: error.status, message: error.message });
@@ -87,7 +87,7 @@ router
         }
         following = !following;
 
-        res.status(201).json({ following });
+        res.status(204).json({ following });
       } catch (error) {
         sendErrResp(res, { status: error.status, message: error.message });
       }
