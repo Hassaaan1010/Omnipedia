@@ -9,7 +9,7 @@ const Posts = ({ posts }) => {
               <h3>{post.title}</h3>
               <p>Likes: {post.likes.length}</p>
               <p>Dislikes: {post.dislikes.length}</p>
-              <p>Grade: {post.grade.join(", ")}</p>
+              <p>Grade: {post.grade}</p>
             </li>
           </div>
         ))}

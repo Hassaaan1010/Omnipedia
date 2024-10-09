@@ -9,6 +9,7 @@ import PostForm from "./postForm";
 const CreatePost = () => {
   const token = localStorage.getItem("token");
   const [tokenAuthorized, setTokenAuthorized] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuthorization = async () => {
@@ -25,15 +26,18 @@ const CreatePost = () => {
           } else {
             setTokenAuthorized(false); // Not authorized
             localStorage.clear(); // Clear local storage if not authorized
+            navigate("/login");
           }
         } catch (error) {
           console.error("Error during authorization check:", error);
           setTokenAuthorized(false);
           localStorage.clear();
+          navigate("/login");
         }
       } else {
         setTokenAuthorized(false); // Token is invalid or not present
         localStorage.clear();
+        navigate("/login");
       }
     };
 

@@ -21,7 +21,7 @@ router
       let { links, data, userId } = req.body;
       let { topicId, title, grade, textContent } = data;
 
-      const postId = await createPost(
+      const [postId, subjectId] = await createPost(
         topicId,
         title,
         grade,
@@ -30,7 +30,12 @@ router
         links
       );
 
-      res.status(200).json({ message: "Posts created successfully", postId });
+      res.status(200).json({
+        message: "Posts created successfully",
+        postId,
+        topicId,
+        subjectId,
+      });
     } catch (error) {
       console.error(error);
       sendErrResp(res, { status: error.status, message: error.message });

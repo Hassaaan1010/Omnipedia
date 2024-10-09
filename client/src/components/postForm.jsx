@@ -227,9 +227,10 @@ const PostForm = () => {
         }
       );
       console.log("Post created successfully:", response.data);
-      // Reset the form if needed
       const subjectId = response.data.subjectId;
-      navigate(`/posts/${response.data.postId}`);
+      navigate(`/topic/${subjectId}/${topicId}`);
+      // Reset the form if needed
+      //   navigate(`/posts/${response.data.postId}`);
     } catch (error) {
       setErrorMessage(error?.response?.data?.message);
 
