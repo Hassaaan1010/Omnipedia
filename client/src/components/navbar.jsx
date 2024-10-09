@@ -1,11 +1,33 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = ({ authorized }) => {
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [showPopup, setShowPopup] = useState(false); // Control for popup visibility
+  const navigate = useNavigate();
   const handleChange = (event) => {
     setSearchQuery(event.target.value);
+  };
+
+  const handleLogoutClick = () => {
+    // Trigger the popup to confirm
+    setShowPopup(true);
+  };
+
+  const confirmLogout = async () => {
+    try {
+      // Clear localStorage and navigate to "/home"
+      localStorage.clear();
+      setShowPopup(false);
+      navigate("/login");
+    } catch (error) {
+      console.log("Error logging out:", error);
+    }
+  };
+
+  const cancelLogout = () => {
+    // Close the popup if logout is canceled
+    setShowPopup(false);
   };
 
   const handleSearch = (event) => {};
@@ -74,9 +96,22 @@ const Navbar = ({ authorized }) => {
 
           {authorized ? (
             <>
-              <button type="button" className="btn btn-outline-light me-2">
-                <Link to="/logout">Logout</Link>
+              <button
+                type="button"
+                onClick={handleLogoutClick}
+                className="btn btn-outline-light me-2"
+              >
+                Logout
               </button>
+              {showPopup && (
+                <div className="popup-overlay">
+                  <div className="popup">
+                    <h3>Are you sure you want to logout?</h3>
+                    <button onClick={confirmLogout}>Confirm</button>
+                    <button onClick={cancelLogout}>Cancel</button>
+                  </div>
+                </div>
+              )}
               <h3>
                 <button>
                   <Link
