@@ -25,8 +25,21 @@ const Navbar = ({ authorized }) => {
                 Home
               </Link>
             </li>
+            {authorized ? (
+              <li>
+                <Link
+                  className="nav-link px-2 text-secondary"
+                  to="/subjects/create"
+                >
+                  Create a Subject
+                </Link>
+              </li>
+            ) : null}
             <li>
-              <Link className="nav-link px-2 text-secondary" to="/subjects/">
+              <Link
+                className="nav-link px-2 text-secondary"
+                to={`/subjects/${localStorage.getItem("userId")}`}
+              >
                 Subjects
               </Link>
             </li>
@@ -60,7 +73,17 @@ const Navbar = ({ authorized }) => {
               <button type="button" className="btn btn-outline-light me-2">
                 <Link to="/logout">Logout</Link>
               </button>
-              <h3>{localStorage.getItem("username")}</h3>
+              <h3>
+                <button>
+                  <Link
+                    to={`http://localhost:5173/profile/${localStorage.getItem(
+                      "userId"
+                    )}`}
+                  >
+                    Profile
+                  </Link>
+                </button>
+              </h3>
             </>
           ) : (
             <div className="text-end" name="Profile/LoginAndSignup">

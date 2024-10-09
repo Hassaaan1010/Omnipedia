@@ -136,7 +136,7 @@ const CreateSubject = () => {
   return (
     <>
       <Navbar authorized={tokenAuthorized}></Navbar>
-      <Link to="\home">Back</Link>
+      <Link to="http://localhost:5173/home/">Back</Link>
       <form onSubmit={handleSubmit}>
         <div>
           <label>

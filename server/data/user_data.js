@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import User from "../models/user.js";
+import Subject from "../models/subject.js";
 import {
   badRequestErr, //400
   unauthorizedErr, //401
@@ -8,6 +9,7 @@ import {
   notFoundErr, //404
   internalServerErr, //500
 } from "../utils/errorHandling.js";
+import { isObjectIdOrHexString } from "mongoose";
 
 dotenv.config();
 
@@ -68,6 +70,41 @@ export const getUserByEmail = async (email) => {
   } catch (error) {
     console.log(`Error in finding user by email ${error}`);
     throw notFoundErr("User with matching email not found.");
+  }
+};
+
+export const getUserById = async (id, requesterId) => {
+  try {
+    // validate email
+    id = id.trim();
+    if (!isObjectIdOrHexString(id)) {
+      throw badRequestErr("Invalid Id");
+    }
+    // find user in collection
+    const user = await User.findOne({ _id: id }).select("-password");
+    console.log("user : ", user);
+
+    const mySubjects = user.mySubjects;
+    const followingSubjects = user.followingSubjects;
+
+    const mySubjectsNames = await Subject.find({
+      _id: { $in: user.mySubjects },
+    }).select("name");
+
+    // user is null
+    if (!user) {
+      throw notFoundErr();
+    }
+
+    return [
+      user,
+      requesterId == user._id,
+      mySubjectsNames,
+      // followingSubjectsNames,
+    ];
+  } catch (error) {
+    console.log(`Error in finding user by id ${error}`);
+    throw notFoundErr("User with matching id not found.");
   }
 };
 

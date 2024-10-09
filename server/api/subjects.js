@@ -8,8 +8,10 @@ import {
 import { apiLimiter } from "../middleware/rateLimiter.js";
 import { authorizeToken } from "../middleware/jwtAuthorizer.js";
 import Subject from "../models/subject.js";
+import User from "../models/user.js";
 import Topic from "../models/topic.js";
 import OmniPost from "../models/omnipost.js";
+import { isObjectIdOrHexString } from "mongoose";
 
 const router = express.Router();
 const nameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*(\s+[a-zA-Z_][a-zA-Z0-9_]*)*$/;
@@ -29,6 +31,30 @@ router
       sendErrResp(res, { status: error.status, message: error.message });
     }
   })
+  .get("/getFollowing/:userId", async (req, res) => {
+    try {
+      console.log("req at subjects/getFollowing/:userId");
+      let { userId } = req.params;
+      userId = userId.trim();
+      if (!isObjectIdOrHexString(userId)) {
+        throw badRequestErr("Invalid userId");
+      }
+      const followedIds = await User.findOne(
+        { userId: userId },
+        "followingSubjects"
+      );
+
+      const followedSubjects = await Subject.find({
+        _id: { $in: followedIds },
+      });
+
+      console.log(followedSubjects);
+      res.status(200).json({ followedSubjects });
+    } catch (error) {
+      sendErrResp(res, { status: error.status, message: error.message });
+    }
+  }) //to fetch followed subjects
+
   .get("/create", apiLimiter, authorizeToken, (req, res) => {
     console.log("reached sub/create");
     res.status(200).json({ authorized: true });

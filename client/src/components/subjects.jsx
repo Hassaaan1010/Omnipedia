@@ -1,67 +1,36 @@
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Navbar from "./navbar";
-import { tokenValid } from "../utils/tokenValidation";
 import { useState, useEffect } from "react";
 
-const Subjects = () => {
-  const token = localStorage.getItem("token");
-  const [tokenAuthorized, setTokenAuthorized] = useState(false);
+const Subjects = ({ userId }) => {
   const [response, setResponse] = useState({
-    subjects: null,
+    followedSubjects: null,
   });
 
   useEffect(() => {
     try {
       const getSubjects = async () => {
-        const res = await axios.get("http://localhost:4000/subjects/");
+        const res = await axios.get(
+          `http://localhost:4000/subjects/getFollowing/${userId}`
+        );
         console.log("resp : ", res.data);
-        setResponse(res.data);
+        setResponse({ followedSubjects: [res.data.followedSubjects] });
       };
       getSubjects();
     } catch (error) {
       console.log("Error fetching subjects.", error);
     }
-  }, []);
+  }, [userId]);
+  console.log(" followed subjs: ", response.followedSubjects);
 
-  useEffect(() => {
-    // authorization
-    if (token && tokenValid(token)) {
-      const checkAuthorization = async () => {
-        try {
-          const res = await axios.get("http://localhost:4000/home/", {
-            headers: {
-              Authorization: `Bearer ${token}`, // Correct Authorization header
-            },
-          });
-
-          if (res.data.authorized) {
-            setTokenAuthorized(true);
-          }
-        } catch (error) {
-          console.error("Error during authorization check:", error);
-          setTokenAuthorized(false);
-          localStorage.clear();
-        }
-      };
-
-      checkAuthorization();
-    } else {
-      setTokenAuthorized(false);
-      localStorage.clear();
-    }
-  }, [token]); // Add token as a dependency // Add token as a dependency
+  // token as a dependency // Add token as a dependency
   return (
     <>
-      <Navbar authorized={tokenAuthorized}></Navbar>
-      <h1>Subjects</h1>
-      <button>
-        <Link to="/subjects/create">Creat a Subject</Link>
-      </button>
+      <h2>Subjects</h2>
       <div className="container">
         <ul>
-          {response.subjects &&
-            response.subjects.map((subject) => {
+          {response.followedSubjects &&
+            response.followedSubjects.map((subject) => {
               return (
                 // Add return here
 

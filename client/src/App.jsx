@@ -22,6 +22,7 @@ import Topics from "./components/topics";
 import Topic from "./components/topic";
 import ViewPost from "./components/viewPost";
 import NotFoundPage from "./components/notFound";
+import Profile from "./components/profile";
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -35,7 +36,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/home" element={<Home />} />
             {/* page for list of subjects */}
-            <Route path="/subjects" element={<Subjects />} />
+            {/* <Route
+              path="/subjects/getFollowing/:userId"
+              element={<Subjects />}
+            /> */}
             {/* singular subject view */}
             <Route path="/subject/:id" element={<Subject />} />
             {/* create subject */}
@@ -48,8 +52,11 @@ function App() {
             <Route path="/topic" element={<Topics />} />
             <Route path="/topic/:subjectId/:topicId" element={<Topic />} />
             <Route path="/notFound" element={NotFoundPage} />
+
+            <Route path="/profile/:id" element={<Profile />} />
+
             {/* <Route path="/topics/create" element={} /> */}
-            <Route path="*" element={<Navigate replace to="/login" />} />
+            {/* <Route path="*" element={<Navigate replace to="/login" />} /> */}
           </Routes>
         </div>
       </BrowserRouter>
