@@ -12,6 +12,7 @@ import User from "../models/user.js";
 import Topic from "../models/topic.js";
 import OmniPost from "../models/omnipost.js";
 import { isObjectIdOrHexString } from "mongoose";
+import { ObjectId } from "mongodb";
 
 const router = express.Router();
 const nameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*(\s+[a-zA-Z_][a-zA-Z0-9_]*)*$/;
@@ -55,6 +56,34 @@ router
     }
   }) //to fetch followed subjects
 
+  .post(
+    "/changeFollowing/:id",
+    apiLimiter,
+    authorizeToken,
+    async (req, res) => {
+      const { id } = req.params;
+
+      const subjectId = req.body.subjectId;
+      let following = req.body.following;
+      console.log("change following reached :", id, subjectId, following);
+      try {
+        if (following) {
+          const updateUser = await User.findByIdAndUpdate(id, {
+            $pull: { followingSubjects: subjectId },
+          });
+        } else {
+          const following = await User.findByIdAndUpdate(id, {
+            $push: { followingSubjects: subjectId },
+          });
+        }
+        following = !following;
+
+        res.status(201).json({ following });
+      } catch (error) {
+        sendErrResp(res, { status: error.status, message: error.message });
+      }
+    }
+  )
   .get("/create", apiLimiter, authorizeToken, (req, res) => {
     console.log("reached sub/create");
     res.status(200).json({ authorized: true });
@@ -84,12 +113,10 @@ router
       // create subject and topics
       const subjectId = await createSubject(userId, subjectName, topics);
 
-      return res
-        .status(201)
-        .json({
-          message: "Subject created successfully",
-          subjectId: subjectId,
-        });
+      return res.status(201).json({
+        message: "Subject created successfully",
+        subjectId: subjectId,
+      });
     } catch (error) {
       console.log(error);
       sendErrResp(res, { status: error.status, message: error.message });
@@ -99,12 +126,40 @@ router
   .get("/:id", apiLimiter, async (req, res) => {
     const subjectId = req.params.id;
     const requesterId = req.headers.userid;
-
+    let follows = false;
+    console.log("reached subejcts:id route");
     let owner = false;
     // the subject item is enough to render the subject/:id page
     // the topics id are links to the topics/:id components
     // the omniposts are list of omni_posts that are to be rendered
     try {
+      // get following status of user for subject
+      if (requesterId && isObjectIdOrHexString(requesterId)) {
+        const userFollowingSubjects = await User.findOne(
+          { _id: requesterId },
+          "followingSubjects"
+        );
+
+        // Convert subjectId to ObjectId for comparison
+        const subjectObjectId = new ObjectId(subjectId);
+
+        if (
+          userFollowingSubjects.followingSubjects.some((subject) =>
+            subject.equals(subjectObjectId)
+          )
+        ) {
+          console.log("User follows subject.");
+          follows = true;
+        } else {
+          console.log("User doesnt follow subject");
+          follows = false;
+        }
+      } else if (requesterId) {
+        console.log("user id invalid.");
+        throw badRequestErr("Invalid requester.");
+      } else {
+      }
+      console.log("follows : : ", follows);
       // we have to get the subject of id subject_id and return two items, Owner flag and subject item.
       const fetchedSubject = await Subject.findOne({ _id: subjectId });
       const topicIds = fetchedSubject.topics;
@@ -130,14 +185,17 @@ router
       // the userId can be compared to requesterId and flag Owner.
       owner = requesterId === fetchedSubject.userId.toString();
 
+      console.log("following ? ? ", follows);
       // llm_content will not show up in db req until it points to a valid post
       res.status(200).json({
         subject: fetchedSubject,
         fetchedTopics: fetchedTopics,
         fetchedOmniposts: fetchedOmniposts,
         owner: owner,
+        following: follows,
       });
-    } catch {
+    } catch (error) {
+      console.log(error);
       sendErrResp(res, { status: error.status, message: error.message });
     }
   });
