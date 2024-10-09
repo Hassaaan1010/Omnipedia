@@ -45,13 +45,13 @@ const Home = () => {
   return (
     <>
       <Navbar search={search} authorized={tokenAuthorized} />
-      <li>
+      {/* <li>
         <Link
           to={`http://localhost:5173/subject/${"67043da159b81b2392d5fdd1"}`}
         >
           Mathematics
         </Link>
-      </li>
+      </li> */}
       {tokenAuthorized ? (
         <Subjects userId={localStorage.getItem("userId")}></Subjects>
       ) : (

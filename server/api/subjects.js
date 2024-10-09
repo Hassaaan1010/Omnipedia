@@ -32,19 +32,28 @@ router
       sendErrResp(res, { status: error.status, message: error.message });
     }
   })
-  .get("/getFollowing/:userId", async (req, res) => {
+  .get("/getFollowing/:userId", apiLimiter, async (req, res) => {
     try {
       console.log("req at subjects/getFollowing/:userId");
       let { userId } = req.params;
       userId = userId.trim();
+
+      // Validate the userId
       if (!isObjectIdOrHexString(userId)) {
         throw badRequestErr("Invalid userId");
       }
-      const followedIds = await User.findOne(
-        { userId: userId },
-        "followingSubjects"
-      );
 
+      // Fetch the user's followingSubjects
+      const user = await User.findOne({ _id: userId }, "followingSubjects");
+
+      if (!user) {
+        throw badRequestErr("User not found");
+      }
+
+      // Extract followingSubjects array
+      const followedIds = user.followingSubjects;
+
+      // Find the subjects the user is following
       const followedSubjects = await Subject.find({
         _id: { $in: followedIds },
       });
@@ -54,7 +63,7 @@ router
     } catch (error) {
       sendErrResp(res, { status: error.status, message: error.message });
     }
-  }) //to fetch followed subjects
+  })
 
   .post(
     "/changeFollowing/:id",
