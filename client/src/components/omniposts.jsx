@@ -6,11 +6,28 @@ const Omniposts = ({ subjectId, omniposts, authorized }) => {
       <h2>Omniposts</h2>
       <ul>
         {omniposts.map((omnipostObject) => (
-          <li key={omnipostObject._id}>
-            <Link to={`http://localhost:5173/omniposts/${omnipostObject._id}`}>
-              {omnipostObject.title}
-            </Link>
-          </li>
+          <div
+            className="postContainer"
+            style={{
+              backgroundColor: "lightgray",
+              margin: "10px",
+              color: "black",
+            }}
+            key={omnipostObject._id}
+          >
+            <li key={omnipostObject._id}>
+              <Link
+                to={`http://localhost:5173/omniposts/${omnipostObject._id}`}
+              >
+                {omnipostObject.title}
+              </Link>
+              <p>Grade: {omnipostObject.grade}</p>
+              <span>
+                Likes: {omnipostObject.likes.length} | Dislikes:{" "}
+                {omnipostObject.dislikes.length}{" "}
+              </span>
+            </li>
+          </div>
         ))}
       </ul>
       {(authorized && (

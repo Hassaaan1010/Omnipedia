@@ -65,16 +65,7 @@ const Subject = () => {
           subjectName: res.data.subject.name,
           topics: res.data.fetchedTopics,
           omniposts: res.data.fetchedOmniposts,
-          omniposts: [
-            {
-              _id: "67043da259b81b2392d5fdd5",
-              title: "Khanacademy",
-            },
-            {
-              _id: "67043da259b81b2392d5fdd6",
-              title: "Apni Kaksha",
-            },
-          ],
+          // omniposts: ,
 
           owner: res.data.owner,
         });

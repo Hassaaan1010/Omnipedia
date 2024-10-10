@@ -188,7 +188,7 @@ router
         {
           _id: { $in: omnipostIds },
         },
-        "title"
+        "title likes dislikes grade"
       );
 
       // the userId can be compared to requesterId and flag Owner.
@@ -196,6 +196,7 @@ router
 
       console.log("following ? ? ", follows);
       // llm_content will not show up in db req until it points to a valid post
+      console.log("fetched omniposts : ", fetchedOmniposts);
       res.status(200).json({
         subject: fetchedSubject,
         fetchedTopics: fetchedTopics,
