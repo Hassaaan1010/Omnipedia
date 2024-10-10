@@ -38,8 +38,8 @@ router
       // Fetch the posts with only specific fields
       const fetchedPosts = await Post.find(
         { _id: { $in: fetchedTopic.posts } },
-        "likes dislikes title grade" // This is the projection: fields to return
-      );
+        "likes dislikes title grade createdAt" // This is the projection: fields to return
+      ).sort({ createdAt: -1 }); //sorting by most recent first
 
       // llm_content will not show up in db req until it points to a valid post
       console.log(fetchedTopic);

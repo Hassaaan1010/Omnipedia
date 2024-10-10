@@ -1,12 +1,69 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Omniposts = ({ subjectId, omniposts, authorized }) => {
-  console.log("omniposts list : ", omniposts);
+  const [sortBy, setSortBy] = useState("Recent");
+  const [includeOnly, setIncludeOnly] = useState("");
+  const [filtered, setFiltered] = useState([...omniposts]);
+  const [sortedPosts, setSortedPosts] = useState([...omniposts]);
+
+  useEffect(() => {
+    let filteredArray = [...omniposts];
+    console.log(filteredArray);
+    if (includeOnly !== "") {
+      filteredArray = filteredArray.filter(
+        (omnipost) => omnipost.grade === includeOnly
+      );
+    }
+    setFiltered(filteredArray);
+  }, [includeOnly, omniposts]);
+
+  useEffect(() => {
+    let sortedArray = [...filtered];
+    if (sortBy === "Recent") {
+      sortedArray.sort(
+        (first, second) =>
+          new Date(second.createdAt) - new Date(first.createdAt)
+      );
+    } else {
+      sortedArray.sort(
+        (first, second) => second.likes.length - first.likes.length
+      );
+    }
+    setSortedPosts(sortedArray);
+  }, [sortBy, filtered]);
+
+  const handleFilter = (e) => {
+    setIncludeOnly(e.target.value);
+  };
+
+  const handleSort = (e) => {
+    setSortBy(e.target.value);
+  };
+
   return (
     <div>
       <h2>Omniposts</h2>
+      <span>Sortby </span>
+      <select name="sortBy" value={sortBy} onChange={handleSort} required>
+        <option value="Recent">Recent</option>
+        <option value="Likes">Likes</option>
+      </select>{" "}
+      |<span> Filter </span>
+      <select
+        name="filter"
+        value={includeOnly}
+        onChange={handleFilter}
+        required
+      >
+        <option value="">Select grade</option>
+        <option value="graduate">Graduate</option>
+        <option value="undergraduate">Undergraduate</option>
+        <option value="high school">High School</option>
+        <option value="middle school">Middle School</option>
+      </select>{" "}
       <ul>
-        {omniposts.map((omnipostObject) => (
+        {sortedPosts.map((omnipostObject) => (
           <div
             className="postContainer"
             style={{

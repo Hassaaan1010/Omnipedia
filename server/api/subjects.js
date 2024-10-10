@@ -188,7 +188,7 @@ router
         {
           _id: { $in: omnipostIds },
         },
-        "title likes dislikes grade"
+        "title likes dislikes grade createdAt"
       );
 
       // the userId can be compared to requesterId and flag Owner.
