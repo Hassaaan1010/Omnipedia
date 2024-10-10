@@ -2,6 +2,7 @@ import express from "express";
 import { apiLimiter } from "../middleware/rateLimiter.js";
 import { authorizeToken } from "../middleware/jwtAuthorizer.js";
 import { badRequestErr, sendErrResp } from "../utils/errorHandling.js";
+import { createOmnipost } from "../data/omnipost_data.js";
 
 const router = express.Router();
 
@@ -19,7 +20,8 @@ router
   .get("/:id", apiLimiter, async (req, res) => {
     res.send("reached get omni/:id route reached");
   })
-  .post("/create", async (params) => {
+  .post("/", async (req, res) => {
+    console.log("reached create omnipost route");
     console.log(req.body);
     try {
       let { links, data, userId } = req.body;
@@ -35,12 +37,12 @@ router
       );
 
       res.status(200).json({
-        message: "omniosts created successfully",
+        message: "omniposts created successfully",
         postId,
         subjectId,
       });
-      console.log("reached omni/create post route");
     } catch (error) {
+      console.log(error);
       sendErrResp(res, { status: error.status, message: error.message });
     }
   });

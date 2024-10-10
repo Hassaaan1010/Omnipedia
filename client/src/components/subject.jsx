@@ -157,6 +157,7 @@ const Subject = () => {
         authorized={tokenAuthorized}
       />
       <Omniposts
+        subjectId={id}
         omniposts={response.omniposts}
         authorized={tokenAuthorized}
       ></Omniposts>

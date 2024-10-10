@@ -23,6 +23,7 @@ import Topic from "./components/topic";
 import ViewPost from "./components/viewPost";
 import NotFoundPage from "./components/notFound";
 import Profile from "./components/profile";
+import CreateOmnipost from "./components/createOmnipost";
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -42,7 +43,7 @@ function App() {
             {/* create subject */}
             <Route path="/subjects/create" element={<CreateSubject />} />
 
-            <Route path="/posts" element={<Posts />} />
+            {/* <Route path="/posts" element={<Posts />} /> */}
             <Route path="/post/:id" element={<ViewPost />} />
             <Route path="/posts/create/:topicId" element={<CreatePost />} />
 
@@ -52,8 +53,14 @@ function App() {
 
             <Route path="/profile/:id" element={<Profile />} />
 
+            <Route
+              path="/omniposts/create/:subjectId"
+              element={<CreateOmnipost />}
+            />
+            {/* <Route path="/omniposts/:id" element/> */}
+
             {/* <Route path="/topics/create" element={} /> */}
-            <Route path="*" element={<Navigate replace to="/login" />} />
+            {/* <Route path="*" element={<Navigate replace to="/login" />} /> */}
           </Routes>
         </div>
       </BrowserRouter>

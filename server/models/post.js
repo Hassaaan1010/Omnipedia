@@ -23,7 +23,7 @@ const postSchema = new Schema(
     },
     grade: {
       type: String,
-      enum: ["undergraduate", "senior_high", "high_school", "middle_school"],
+      enum: ["graduate", "undergraduate", "high school", "middle school"],
       required: true,
     },
     textContent: {

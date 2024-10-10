@@ -23,7 +23,7 @@ const omniPostSchema = new Schema(
     },
     grade: {
       type: String,
-      enum: ["undergrad", "senior_high", "high_school", "middle_school"],
+      enum: ["graduate", "undergraduate", "high school", "middle school"],
       required: true,
     },
     textContent: {

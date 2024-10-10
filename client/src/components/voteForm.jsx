@@ -78,29 +78,3 @@ const VoteForm = (props) => {
 };
 
 export default VoteForm;
-
-/*   const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
-
-  const handleLike = () => {
-    if (disliked) setDisliked(false); // Remove dislike if present
-    setLiked(!liked); // Toggle like
-  };
-
-  const handleDislike = () => {
-    if (liked) setLiked(false); // Remove like if present
-    setDisliked(!disliked); // Toggle dislike
-    try {
-      const res = axios.post(
-        `http://localhost:4000/post/like/${props.userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-    } catch (error) {
-      console.log("Error in liking", error);
-    }
-  };
-  console.log("props liked : ", props.liked); */

@@ -23,9 +23,9 @@ const routerNode = (app) => {
   app.use("/topics", topicsRouter);
 
   // if user is logged in, /login will redirect to home
-  app.use("*", (req, res) => {
-    res.redirect("/login");
-  });
+  // app.use("*", (req, res) => {
+  //   res.redirect("/login");
+  // });
 };
 
 export default routerNode;

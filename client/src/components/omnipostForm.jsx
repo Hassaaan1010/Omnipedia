@@ -2,23 +2,22 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
-const PostForm = () => {
+const OmnipostForm = () => {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId"); // Get userId from localStorage
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const { topicId } = useParams(); // Extract topicId from URL parameters
+  const [links, setLinks] = useState([""]); // Initialize with one empty input
+
+  const { subjectId } = useParams(); // Extract topicId from URL parameters
   const [formData, setFormData] = useState({
-    topicId: topicId, // Set topicId from URL params
+    subjectId: subjectId, // Set subjectId from URL params
     title: "",
     grade: "",
     textContent: "",
   });
 
-  const [links, setLinks] = useState([""]); // Initialize with one empty input
-
   const handleChange = (e) => {
-    console.log(errorMessage);
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -50,15 +49,14 @@ const PostForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("links : ", links);
-    console.log("data : ", formData);
-
-    // Append the links to FormData
-    // links.forEach((link) => data.append("linkUrls", link));
-
+    console.log("data", {
+      links: links,
+      data: formData,
+      userId: userId,
+    });
     try {
-      const response = await axios.post(
-        "http://localhost:4000/posts/",
+      const res = await axios.post(
+        "http://localhost:4000/omniposts/",
         {
           links: links,
           data: formData,
@@ -66,22 +64,25 @@ const PostForm = () => {
         },
         {
           headers: {
-            // Add this headers property
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log("Post created successfully:", response.data);
-      const subjectId = response.data.subjectId;
-      navigate(`/topic/${subjectId}/${topicId}`);
+      console.log("omnipost created successfully", res.data.message);
+      navigate(`/subject/${subjectId}`);
     } catch (error) {
       setErrorMessage(error?.response?.data?.message);
-      console.error("Error creating post:", error);
+      console.log("Error in creating omnipost", error);
     }
   };
 
   return (
     <>
+      <br />
+      <h6>
+        Posts that span most or all topics of the subject, like a playlist,
+        course or courebook
+      </h6>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Title:</label>
@@ -136,10 +137,10 @@ const PostForm = () => {
         </div>
         <p style={{ color: "red" }}>{errorMessage}</p>
 
-        <button type="submit">Create Post</button>
+        <button type="submit">Create Omnipost</button>
       </form>
     </>
   );
 };
 
-export default PostForm;
+export default OmnipostForm;

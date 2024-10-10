@@ -67,7 +67,7 @@ router
       );
 
       console.log("Post updated: ", updatedPost);
-      res.status(204).json({ success: true, message: "liked successfully" });
+      res.status(204).json({ success: true });
     } catch (error) {
       console.log("error liking : ", error);
       sendErrResp(res, { status: error.status, message: error.message });
@@ -89,7 +89,7 @@ router
       );
 
       console.log("fetched :", updatedPost);
-      res.status(204).json({ success: true, message: "disliked successfully" });
+      res.status(204).json({ success: true });
     } catch (error) {
       console.log("error disliking : ", error);
       sendErrResp(res, { status: error.status, message: error.message });

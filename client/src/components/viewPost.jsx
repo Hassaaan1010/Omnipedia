@@ -13,10 +13,11 @@ const ViewPost = () => {
   const requesterId = localStorage.getItem("userId");
   const [tokenAuthorized, setTokenAuthorized] = useState(false);
   const navigate = useNavigate();
-  const [liked, setLiked] = useState(false);
+  //   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
   const [post, setPost] = useState({
     title: "",
+    topicId: "",
     userId: "",
     textContent: "",
     grade: "",
@@ -37,17 +38,19 @@ const ViewPost = () => {
           }
         );
         const responsePost = response.data.post;
-        if (tokenAuthorized && requesterId in post.likes) {
-          // person liked post
-          setLiked(true);
-        } else if (tokenAuthorized && requesterId in post.dislikes) {
-          // person disliked post
-          setLiked(false);
-        } else {
-        }
+        // if (tokenAuthorized && requesterId in post.likes) {
+        //   // person liked post
+        //   setLiked(true);
+        // } else if (tokenAuthorized && requesterId in post.dislikes) {
+        //   // person disliked post
+        //   setLiked(false);
+        // } else {
+        // }
+
         setBookmarked(response.data.bookmarked);
         setPost({
           title: responsePost.title,
+          topicId: responsePost.topicId,
           userId: responsePost.userId,
           textContent: responsePost.textContent,
           grade: responsePost.grade,
@@ -96,11 +99,9 @@ const ViewPost = () => {
     }
   }, [token]); // Add token as a dependency
 
-  console.log("like: ", liked);
   return (
     <>
       <Navbar authorized={tokenAuthorized}></Navbar>
-
       <div>
         <h2>Post : {post.title}</h2>
         <span>
@@ -128,7 +129,6 @@ const ViewPost = () => {
               authorized={tokenAuthorized}
               userId={requesterId}
               postId={postId}
-              liked={liked}
               likes={post.likes}
               dislikes={post.dislikes}
             ></VoteForm>

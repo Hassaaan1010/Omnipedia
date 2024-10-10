@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const Omniposts = ({ omniposts, authorized }) => {
+const Omniposts = ({ subjectId, omniposts, authorized }) => {
   return (
     <div>
       <h2>Omniposts</h2>
@@ -15,7 +15,7 @@ const Omniposts = ({ omniposts, authorized }) => {
       </ul>
       {(authorized && (
         <button>
-          <Link to="http://localhost:5173/omniposts/create/">
+          <Link to={`http://localhost:5173/omniposts/create/${subjectId}`}>
             Create Omnipost
           </Link>
         </button>
