@@ -2,14 +2,17 @@ import React, { useEffect, useState } from "react";
 import "./likeDislike.css"; // Import your custom styles
 import axios from "axios";
 
+// props : likes, disliks, auth, userId postId
+
 const VoteForm = (props) => {
   const token = localStorage.getItem("token");
-  const [opinion, setOpinion] = useState(undefined);
+  // const [opinion, setOpinion] = useState(undefined);
   console.log("voteform props", props);
   const [vote, setVote] = useState({
     liked: false,
     disliked: false,
   });
+
   useEffect(() => {
     console.log("dislikes", props.dislikes);
     if (props.likes.includes(props.userId)) {
@@ -18,14 +21,25 @@ const VoteForm = (props) => {
       setVote({ liked: false, disliked: true });
     }
   }, [props.likes, props.dislikes, props.userId]);
+
   const handleLike = async () => {
     // if vote isnt already liked
     if (!vote.liked) {
       setVote({ liked: true, disliked: false });
       try {
+        console.log(`http://localhost:4000/${props.route}/like/`, {
+          userId: props.userId,
+          postId: props.postId || null,
+          omnipostId: props.omnipostId || null,
+        });
         const res = await axios.post(
-          `http://localhost:4000/posts/like/`,
-          { userId: props.userId, postId: props.postId },
+          // `http://localhost:4000/posts/like/`,
+          `http://localhost:4000/${props.route}/like/`,
+          {
+            userId: props.userId,
+            postId: props.postId || null,
+            omnipostId: props.omnipostId || null,
+          },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -43,9 +57,18 @@ const VoteForm = (props) => {
     if (!vote.disliked) {
       setVote({ liked: false, disliked: true });
       try {
+        console.log(`http://localhost:4000/${props.route}/like/`, {
+          userId: props.userId,
+          postId: props.postId || null,
+          omnipostId: props.omnipostId || null,
+        });
         const res = await axios.post(
-          `http://localhost:4000/posts/dislike/`,
-          { userId: props.userId, postId: props.postId },
+          `http://localhost:4000/${props.route}/dislike/`,
+          {
+            userId: props.userId,
+            postId: props.postId || null,
+            omnipostId: props.omnipostId || null,
+          },
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -13,6 +13,9 @@ router
     console.log("posts get /:id route reached");
     const { id } = req.params;
     console.log(id);
+    if (!id) {
+      throw badRequestErr("no omnipostid provided");
+    }
     try {
       const fetchedPost = await Post.findOne({ _id: id });
       console.log(fetchedPost);

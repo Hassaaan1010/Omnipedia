@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 const Omniposts = ({ subjectId, omniposts, authorized }) => {
+  console.log("omniposts list : ", omniposts);
   return (
     <div>
       <h2>Omniposts</h2>

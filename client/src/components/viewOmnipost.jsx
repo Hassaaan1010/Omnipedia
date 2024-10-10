@@ -7,17 +7,16 @@ import VoteForm from "./voteForm";
 import BookmarkButton from "./bookmarkButton";
 import axios from "axios";
 
-const ViewPost = () => {
-  const { id: postId } = useParams();
+const ViewOmnipost = () => {
+  const { id: omnipostId } = useParams();
   const token = localStorage.getItem("token");
   const requesterId = localStorage.getItem("userId");
   const [tokenAuthorized, setTokenAuthorized] = useState(false);
   const navigate = useNavigate();
-  //   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
-  const [post, setPost] = useState({
+  const [omnipost, setOmnipost] = useState({
     title: "",
-    topicId: "",
+    subjectId: "",
     userId: "",
     textContent: "",
     grade: "",
@@ -28,31 +27,35 @@ const ViewPost = () => {
 
   useEffect(() => {
     try {
-      const getPost = async () => {
+      const getOmnipost = async () => {
+        console.log(
+          "request route: ",
+          `http://localhost:4000/omniposts/${omnipostId}`
+        );
         const response = await axios.get(
-          `http://localhost:4000/posts/${postId}`,
+          `http://localhost:4000/omniposts/${omnipostId}`,
           {
             headers: {
               userId: localStorage.getItem("userId"),
             },
           }
         );
-        const responsePost = response.data.post;
-
+        const responseOmnipost = response.data.omnipost;
+        console.log("resp omni :", responseOmnipost);
         setBookmarked(response.data.bookmarked);
-        setPost({
-          title: responsePost.title,
-          topicId: responsePost.topicId,
-          userId: responsePost.userId,
-          textContent: responsePost.textContent,
-          grade: responsePost.grade,
-          links: responsePost.linkUrls,
-          likes: responsePost.likes,
-          dislikes: responsePost.dislikes,
+        setOmnipost({
+          title: responseOmnipost.title,
+          subjectId: responseOmnipost.subjectId,
+          userId: responseOmnipost.userId,
+          textContent: responseOmnipost.textContent,
+          grade: responseOmnipost.grade,
+          links: responseOmnipost.linkUrls,
+          likes: responseOmnipost.likes,
+          dislikes: responseOmnipost.dislikes,
         });
       };
-      getPost();
-      console.log(post.links);
+      getOmnipost();
+      console.log(omnipost);
     } catch (error) {
       if (error.res?.status == 404) {
         navigate("/notFound");
@@ -60,7 +63,7 @@ const ViewPost = () => {
         console.log("Error : ", error.res?.data?.message);
       }
     }
-  }, [postId]);
+  }, [omnipostId]);
 
   // authorization
   useEffect(() => {
@@ -95,17 +98,17 @@ const ViewPost = () => {
     <>
       <Navbar authorized={tokenAuthorized}></Navbar>
       <div>
-        <h2>Post : {post.title}</h2>
+        <h2>Omnipost : {omnipost.title}</h2>
         <span>
-          <Link to={`http://localhost:5173/profile/${post.userId}`}>
+          <Link to={`http://localhost:5173/profile/${omnipost.userId}`}>
             Author
           </Link>
         </span>
         <br />
-        <span>Grade : {post.grade}</span>
-        <p>Content: {post.textContent}</p>
+        <span>Grade : {omnipost.grade}</span>
+        <p>Content: {omnipost.textContent}</p>
         <div className="Links">
-          {post.links.map((link, i) => {
+          {omnipost.links.map((link, i) => {
             return (
               <li key={i}>
                 <h4>
@@ -120,10 +123,10 @@ const ViewPost = () => {
             <VoteForm
               authorized={tokenAuthorized}
               userId={requesterId}
-              route={"posts"}
-              postId={postId}
-              likes={post.likes}
-              dislikes={post.dislikes}
+              route={"omniposts"}
+              omnipostId={omnipostId}
+              likes={omnipost.likes}
+              dislikes={omnipost.dislikes}
             ></VoteForm>
             <BookmarkButton bookmarked={bookmarked}></BookmarkButton>
           </>
@@ -135,4 +138,4 @@ const ViewPost = () => {
   );
 };
 
-export default ViewPost;
+export default ViewOmnipost;
