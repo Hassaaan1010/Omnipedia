@@ -61,6 +61,6 @@ export const createSubject = async (userId, subjectName, topics) => {
 
     console.log("saved subject", savedSubject);
     // success response
-    return savedSubject._id;
+    return savedSubject;
   }
 };

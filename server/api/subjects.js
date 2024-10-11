@@ -14,6 +14,8 @@ import OmniPost from "../models/omnipost.js";
 import { isObjectIdOrHexString } from "mongoose";
 import { ObjectId } from "mongodb";
 
+import { addToSubjectIdx } from "../indexes/subjectIndex.js";
+
 const router = express.Router();
 const nameRegex = /^[a-zA-Z_][a-zA-Z0-9_]*(\s+[a-zA-Z_][a-zA-Z0-9_]*)*$/;
 
@@ -120,11 +122,14 @@ router
           break;
       }
       // create subject and topics
-      const subjectId = await createSubject(userId, subjectName, topics);
+      const savedSubject = await createSubject(userId, subjectName, topics);
+
+      // update lunr search index
+      addToSubjectIdx(savedSubject);
 
       return res.status(201).json({
         message: "Subject created successfully",
-        subjectId: subjectId,
+        subjectId: savedSubject._id,
       });
     } catch (error) {
       console.log(error);

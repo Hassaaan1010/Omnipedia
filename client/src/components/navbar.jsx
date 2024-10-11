@@ -30,7 +30,19 @@ const Navbar = ({ authorized }) => {
     setShowPopup(false);
   };
 
-  const handleSearch = (event) => {};
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    // redirect to search page with search as params appended
+    const query = searchQuery.trim();
+    const encodedQuery = encodeURIComponent(query);
+    console.log(query);
+    navigate(`/search?q=${query}`);
+  };
+
   return (
     <nav className="p-3 text-bg-dark">
       <div className="container">
@@ -82,7 +94,7 @@ const Navbar = ({ authorized }) => {
               aria-label="Search"
               value={searchQuery}
               style={{ height: "30px" }}
-              onChange={handleChange}
+              onChange={handleSearchChange}
             />
             {"  "}
             <button

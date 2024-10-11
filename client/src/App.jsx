@@ -25,6 +25,7 @@ import NotFoundPage from "./components/notFound";
 import Profile from "./components/profile";
 import CreateOmnipost from "./components/createOmnipost";
 import Omnipost from "./components/viewOmnipost";
+import SearchResults from "./components/searchResults";
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -38,6 +39,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/home" element={<Home />} />
             {/* page for list of subjects */}
+
+            <Route path="/search" element={<SearchResults />} />
 
             {/* singular subject view */}
             <Route path="/subject/:id" element={<Subject />} />
@@ -61,7 +64,7 @@ function App() {
             <Route path="/omniposts/:id" element={<Omnipost />} />
 
             {/* <Route path="/topics/create" element={} /> */}
-            <Route path="*" element={<Navigate replace to="/login" />} />
+            {/* <Route path="*" element={<Navigate replace to="/login" />} /> */}
           </Routes>
         </div>
       </BrowserRouter>

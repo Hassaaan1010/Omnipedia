@@ -9,6 +9,9 @@ import connect_database from "./config/mongoose.js";
 import routerNode from "./api/index.js";
 dotenv.config();
 
+import { initializeSubjectsIndexes } from "./indexes/subjectIndex.js";
+import { initializeTopicsIndexes } from "./indexes/topicIndex.js";
+
 const port = process.env.PORT;
 const app = express();
 const cors_options = {
@@ -34,7 +37,8 @@ app.use(
 (async () => {
   try {
     await connect_database();
-
+    await initializeSubjectsIndexes();
+    await initializeTopicsIndexes();
     app.listen(port, () => {
       console.log(`Started running port at`, port);
     });

@@ -9,11 +9,13 @@ import postsRouter from "./posts.js";
 import subjectsRouter from "./subjects.js";
 import topicsRouter from "./topics.js";
 import omnipostsRouter from "./omniposts.js";
+import searchRouter from "./search.js";
 
 const routerNode = (app) => {
   app.use("/login", loginRouter);
   app.use("/logout", logoutRouter);
   app.use("/register", registerRouter);
+  app.use("/search", searchRouter);
   app.use("/home", homeRouter);
   app.use("/users", usersRouter);
   app.use("/folders", foldersRouter);
