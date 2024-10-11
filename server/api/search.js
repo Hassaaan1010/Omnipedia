@@ -10,9 +10,9 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   //   let tokens = req.body.searchTokens;
   try {
-    let query = req.body.query;
-    query = query.trim();
-
+    let query = req.query.query;
+    // query = query.trim();
+    console.log(query, typeof query);
     if (query) {
       let subjectSearchResults = await searchSubjectIndex(query);
       let topicSearchResults = await searchTopicIndex(query);

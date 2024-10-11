@@ -64,7 +64,7 @@ function App() {
             <Route path="/omniposts/:id" element={<Omnipost />} />
 
             {/* <Route path="/topics/create" element={} /> */}
-            {/* <Route path="*" element={<Navigate replace to="/login" />} /> */}
+            <Route path="*" element={<Navigate replace to="/login" />} />
           </Routes>
         </div>
       </BrowserRouter>
