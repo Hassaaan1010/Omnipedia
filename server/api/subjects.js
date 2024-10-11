@@ -176,12 +176,12 @@ router
       console.log("follows : : ", follows);
       // we have to get the subject of id subject_id and return two items, Owner flag and subject item.
       const fetchedSubject = await Subject.findOne({ _id: subjectId });
-      const topicIds = fetchedSubject.topics;
-      const omnipostIds = fetchedSubject.omniposts;
-
       if (!fetchedSubject) {
         throw notFoundErr("Subject Not Found");
       }
+
+      const topicIds = fetchedSubject.topics;
+      const omnipostIds = fetchedSubject.omniposts;
 
       // fetch the list of topics that match the topic IDs
       const fetchedTopics = await Topic.find(

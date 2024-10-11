@@ -23,6 +23,13 @@ const folderSchema = new Schema(
         default: [],
       },
     ],
+    omniposts: [
+      {
+        type: Schema.Types.ObjectId, // Array of post IDs
+        ref: "Omnipost", // Reference to the Post model
+        default: [],
+      },
+    ],
   },
   { timestamps: true }
 );
