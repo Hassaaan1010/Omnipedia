@@ -26,6 +26,7 @@ import Profile from "./components/profile";
 import CreateOmnipost from "./components/createOmnipost";
 import Omnipost from "./components/viewOmnipost";
 import SearchResults from "./components/searchResults";
+import MyFolders from "./components/myFolders.jsx";
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -53,7 +54,6 @@ function App() {
 
             <Route path="/topic" element={<Topics />} />
             <Route path="/topic/:subjectId/:topicId" element={<Topic />} />
-            <Route path="/notFound" element={<NotFoundPage />} />
 
             <Route path="/profile/:id" element={<Profile />} />
 
@@ -63,7 +63,14 @@ function App() {
             />
             <Route path="/omniposts/:id" element={<Omnipost />} />
 
+            {/* Route to see myFolders */}
+            <Route path="/folders/:userId" element={<MyFolders />} />
+            {/* Route to a folder */}
+            {/* <Route path="/folder/:folderid" element={123} /> */}
+            {/* <Route path="" element={123} /> */}
+
             {/* <Route path="/topics/create" element={} /> */}
+            <Route path="/notFound" element={<NotFoundPage />} />
             <Route path="*" element={<Navigate replace to="/login" />} />
           </Routes>
         </div>

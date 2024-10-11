@@ -5,9 +5,10 @@ import { searchTopicIndex } from "../indexes/topicIndex.js";
 import { badRequestErr, sendErrResp } from "../utils/errorHandling.js";
 import Subject from "../models/subject.js";
 import Topic from "../models/topic.js";
+import { apiLimiter } from "../middleware/rateLimiter.js";
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", apiLimiter, async (req, res) => {
   //   let tokens = req.body.searchTokens;
   try {
     let query = req.query.query;

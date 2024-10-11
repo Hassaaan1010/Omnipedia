@@ -12,6 +12,7 @@ const Profile = () => {
   const token = localStorage.getItem("token");
   const [tokenAuthorized, setTokenAuthorized] = useState(false);
   const [response, setResponse] = useState({
+    userId: "",
     username: "",
     email: "",
     grade: "",
@@ -34,6 +35,7 @@ const Profile = () => {
         });
         console.log("data  :", res.data);
         setResponse({
+          userId: res.data.user._id,
           username: res.data.user.username,
           email: res.data.user.email,
           grade: res.data.user.grade,
@@ -142,7 +144,7 @@ const Profile = () => {
           <Subjects userId={id}></Subjects>
         </div>
         <div>
-          <Link to={`http://localhost:4000/folders/${response.userId}`}>
+          <Link to={`http://localhost:5173/folders/${response.userId}`}>
             Folders
           </Link>
         </div>
