@@ -44,7 +44,7 @@ router
     console.log(userId, folderName);
     try {
       const createdFolder = await createFolder(userId, folderName);
-      res.status(200).json({ createdFolder });
+      res.status(201).json({ createdFolder });
     } catch (error) {
       sendErrResp(res, { status: error.status, message: error.message });
     }
