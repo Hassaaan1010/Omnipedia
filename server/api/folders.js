@@ -78,14 +78,19 @@ router
     console.log("post add post to existing folder reached");
     try {
       console.log("BODY :", req.body);
-      const { postId, folderId } = req.body;
-      console.log(postId, folderId);
-      if (!isObjectIdOrHexString(postId) || !isObjectIdOrHexString(folderId)) {
+      const { postId, folderId, userId } = req.body;
+      console.log(postId, folderId, userId);
+      if (
+        !isObjectIdOrHexString(postId) ||
+        !isObjectIdOrHexString(folderId) ||
+        !isObjectIdOrHexString(userId)
+      ) {
         throw badRequestErr("invalid data sent");
       }
-      const message = await addPostToFolder(postId, folderId);
+      const message = await addPostToFolder(postId, folderId, userId);
       res.status(201).json({ message: message });
     } catch (error) {
+      console.log(error);
       sendErrResp(res, { status: error.status, message: error.message });
     }
   })
@@ -102,6 +107,7 @@ router
       const message = await removePostFromFolder(postId, userId, folderId);
       res.status(201).json({ message: message });
     } catch (error) {
+      console.log(error);
       sendErrResp(res, { status: error.status, message: error.message });
     }
   })
