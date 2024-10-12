@@ -1,41 +1,106 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const BookmarkButton = () => {
   // State to track whether the item is bookmarked
+  const { id: postId } = useParams();
   const [showPopup, setShowPopUp] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState("");
   const [newFolderForm, setNewFolderForm] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
   const showFolders = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:4000/folders/all/${localStorage.getItem("userId")}`
+        `http://localhost:4000/folders/all/${userId}`
       );
       console.log("res.data:", res.data);
       setFolders(res.data.folders);
     } catch (error) {
-      console.log("error occured", error);
+      console.log("error occured while fetching folders", error);
     }
   };
 
   // Toggle bookmark state
   const toggleBookmark = async () => {
-    setIsBookmarked((prevState) => !prevState);
-    await showFolders();
-    setShowPopUp(true);
+    if (!isBookmarked) {
+      setIsBookmarked(true);
+      await showFolders();
+      setShowPopUp(true);
+    } else {
+      setIsBookmarked(false);
+      try {
+        await axios.post(
+          `http://localhost:4000/folders/removePost/`,
+          {
+            postId: postId,
+            userId: userId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.log("Error", error);
+      }
+    }
   };
 
-  const handleSubmit = () => {
-    // end with
-    setShowPopUp(false);
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (newFolderForm && selectedFolder == "Create New") {
+        console.log("creating new folder and adding post...".toUpperCase());
+        // post data to 4000/createAndAdd
+        const res = await axios.post(
+          `http://localhost:4000/folders/createAndAdd`,
+          {
+            folderName: newFolderName,
+            postId: postId,
+            userId: userId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log("Created folder and added post successfully");
+      } else {
+        console.log("adding post...");
 
-  const handleNewFolderSubmit = () => {
+        // post data to 4000/addPost/
+        const res = await axios.post(
+          `http://localhost:4000/folders/addPost/`,
+          {
+            postId: postId,
+            folderId: selectedFolder,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log("Added post successfully");
+      }
+    } catch (error) {
+      console.log("Error in adding post/ create and add post", error);
+      console.log(
+        "Error:",
+        error.response?.data?.message,
+        "Status:",
+        error.response?.status
+      );
+    }
+
     // end with
     setShowPopUp(false);
   };
@@ -48,7 +113,6 @@ const BookmarkButton = () => {
   const handleFolderSelect = (e) => {
     e.preventDefault();
     setSelectedFolder(e.target.value);
-    console.log("selected: ", selectedFolder);
   };
 
   useEffect(() => {
@@ -58,7 +122,7 @@ const BookmarkButton = () => {
     } else {
       setNewFolderForm(false);
     }
-  }, [selectedFolder]);
+  }, [selectedFolder, newFolderForm]);
 
   return (
     <>
@@ -78,7 +142,7 @@ const BookmarkButton = () => {
                     Select
                   </option>
                   {folders.map((folder, i) => (
-                    <option key={i} value={folder.name}>
+                    <option key={i} value={folder._id}>
                       {folder.name}
                     </option>
                   ))}

@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const createJwtToken = async (user) => {
-  const expiresIn = "2h"; // 2 hour life
+  const expiresIn = "12h"; // 2 hour life
 
   console.log("creating token ...", user);
   const payload = {

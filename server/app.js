@@ -18,6 +18,16 @@ const cors_options = {
   optionsSuccessStatus: 200,
 };
 
+morgan.token("customDate", () => {
+  const currentDate = new Date().toISOString();
+  return currentDate;
+});
+app.use(
+  morgan(
+    ":method :url :status :response-time ms - :res[content-length] :customDate"
+  )
+);
+
 const logRequestDetails = (req, res, next) => {
   const currentDateTime = new Date().toLocaleString(); // Get current date and time
   console.log("---- Incoming Request ----");
@@ -32,18 +42,10 @@ const logRequestDetails = (req, res, next) => {
   console.log("--------------------------");
   next(); // Move to the next middleware or route handler
 };
-
-morgan.token("customDate", () => {
-  const currentDate = new Date().toISOString();
-  return currentDate;
-});
-app.use(
-  morgan(
-    ":method :url :status :response-time ms - :res[content-length] :customDate"
-  )
-);
 app.use(logRequestDetails);
+
 app.use(cors(cors_options));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 routerNode(app);
