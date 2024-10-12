@@ -19,7 +19,7 @@ const BookmarkButton = () => {
     try {
       const getBookmarkedState = async () => {
         const bookmarkResponse = await axios.get(
-          "http://localhost:4000/checkBookmarked/",
+          "http://localhost:4000/folders/checkBookmarked/",
           {
             params: { userId, postId },
           }
@@ -27,7 +27,7 @@ const BookmarkButton = () => {
         console.log("Response:", bookmarkResponse.data);
         setIsBookmarked(bookmarkResponse.data.isBookmarked);
         if (isBookmarked) {
-          setSavedFolder(bookmarkResponse.data.folderId);
+          setSavedFolder(bookmarkResponse.data.folderId2);
         }
       };
       getBookmarkedState();

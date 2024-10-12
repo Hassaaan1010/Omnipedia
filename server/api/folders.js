@@ -60,14 +60,14 @@ router
       console.log("check bookmarked get route reached");
       console.log("P A R A M S :", req.query);
 
-      const { userId, folderId } = req.query; // Extract query params
-      console.log("asdfsa", userId, folderId);
+      const { userId, postId } = req.query; // Extract query params
+      console.log("asdfsa", userId, postId);
       try {
         const { isBookmarked, folderId } = await checkBookmarked(
           userId,
-          folderId
+          postId
         );
-        res.status(200).json({ isBookmarked, folderId });
+        res.status(200).json({ isBookmarked, folderId2: folderId });
       } catch (error) {
         console.log(error);
         sendErrResp(res, { status: error.status, message: error.message });
