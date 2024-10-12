@@ -52,13 +52,11 @@ const BookmarkButton = () => {
   // Toggle bookmark state
   const toggleBookmark = async () => {
     if (!isBookmarked) {
-      setIsBookmarked(true);
       await showFolders();
       setShowPopUp(true);
     } else {
-      setIsBookmarked(false);
       try {
-        await axios.post(
+        const removeResponse = await axios.post(
           `http://localhost:4000/folders/removePost/`,
           {
             postId: postId,
@@ -71,6 +69,8 @@ const BookmarkButton = () => {
             },
           }
         );
+        console.log("MeSSage: ", removeResponse.data.message);
+        setIsBookmarked(false);
       } catch (error) {
         console.log("Error", error);
       }
@@ -116,6 +116,8 @@ const BookmarkButton = () => {
         );
         console.log("Added post successfully");
       }
+      // if everything goes fine. then mark as saved.
+      setIsBookmarked(true);
     } catch (error) {
       console.log("Error in adding post/ create and add post", error);
       console.log(
