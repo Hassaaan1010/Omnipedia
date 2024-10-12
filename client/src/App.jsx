@@ -69,6 +69,7 @@ function App() {
             {/* <Route path="/folder/:folderid" element={123} /> */}
             {/* <Route path="" element={123} /> */}
 
+            {/* add topics should be a pop up not a route*/}
             {/* <Route path="/topics/create" element={} /> */}
             <Route path="/notFound" element={<NotFoundPage />} />
             <Route path="*" element={<Navigate replace to="/login" />} />
