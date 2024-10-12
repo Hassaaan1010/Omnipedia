@@ -35,7 +35,7 @@ const BookmarkButton = () => {
       console.error("Error:", error.response?.data || error.message);
       throw error;
     }
-  }, [postId]);
+  }, [postId, isBookmarked]);
 
   const showFolders = async () => {
     try {
@@ -114,9 +114,10 @@ const BookmarkButton = () => {
             },
           }
         );
-        console.log("Added post successfully");
+        console.log("Added post successfully", res.data.message);
       }
-      // if everything goes fine. then mark as saved.
+      // if everything goes fine. remove popup then mark as saved.
+      setShowPopUp(true);
       setIsBookmarked(true);
     } catch (error) {
       console.log("Error in adding post/ create and add post", error);
@@ -133,7 +134,7 @@ const BookmarkButton = () => {
   };
 
   const onCancel = () => {
-    setIsBookmarked((prevState) => !prevState);
+    setIsBookmarked(false);
     setShowPopUp(false);
   };
 

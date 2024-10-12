@@ -38,12 +38,14 @@ const createFolder = async (userId, folderName) => {
     name: folderName,
   });
 
+  // create new folder
+  const createdFolder = await newFolder.save();
+
   // update user folder list
   const updatedUser = await User.findByIdAndUpdate(userId, {
     $push: { folders: newFolder._id },
   });
 
-  const createdFolder = await newFolder.save();
   return createdFolder;
 };
 
@@ -140,4 +142,55 @@ const checkBookmarked = async (userId, postId) => {
   }
 };
 
-export { createFolder, addPostToFolder, removePostFromFolder, checkBookmarked };
+const createFolderAndSave = async (folderName, postId, userId) => {
+  // validate name
+  folderName = folderName.trim();
+  postId = postId.trim();
+  userId = userId.trim();
+
+  if (
+    !isObjectIdOrHexString(postId) ||
+    !isObjectIdOrHexString(userId) ||
+    !nameRegex.test(folderName)
+  ) {
+    throw badRequestErr("Invalid data sent. Check folder name");
+  }
+
+  // create a folder and update user. then add the postId to the folder
+
+  const userIdObject = new ObjectId(userId);
+  // Check if folder name already exists for the user
+  const existingFolder = await Folder.findOne({
+    ownerId: userIdObject,
+    name: folderName,
+  });
+
+  if (existingFolder) {
+    throw badRequestErr(`${folderName} already exists`);
+  }
+
+  //   create new folder object with posts having the  postId that is to be saved
+  const newFolder = new Folder({
+    ownerId: userIdObject,
+    name: folderName,
+    posts: [postId],
+  });
+
+  // create new folder
+  const createdFolder = await newFolder.save();
+
+  // update user folder list
+  const updatedUser = await User.findByIdAndUpdate(userId, {
+    $push: { folders: newFolder._id },
+  });
+
+  return createdFolder;
+};
+
+export {
+  createFolder,
+  addPostToFolder,
+  removePostFromFolder,
+  checkBookmarked,
+  createFolderAndSave,
+};

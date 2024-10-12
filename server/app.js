@@ -45,7 +45,6 @@ const logRequestDetails = (req, res, next) => {
 app.use(logRequestDetails);
 
 app.use(cors(cors_options));
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 routerNode(app);

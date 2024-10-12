@@ -6,6 +6,7 @@ import {
   addPostToFolder,
   removePostFromFolder,
   checkBookmarked,
+  createFolderAndSave,
 } from "../data/folder_data.js";
 import { badRequestErr, sendErrResp } from "../utils/errorHandling.js";
 import { authorizeToken } from "../middleware/jwtAuthorizer.js";
@@ -113,11 +114,20 @@ router
   })
   .post("/createAndAdd/", apiLimiter, authorizeToken, async (req, res) => {
     console.log("post create new folder add post reached");
-    res.sendStatus(201);
+
+    // i need folder name, user id, and post id.
+    console.log("BODY RECIEVED", req.body);
+    let { folderName, postId, userId } = req.body;
+
+    const createdFolder = await createFolderAndSave(folderName, postId, userId);
+    res.status(201).json({
+      message: "Post saved to new folder successfully",
+      newFolder: createdFolder,
+    });
   })
   .get("/:id", apiLimiter, async (req, res) => {
     console.log("get posts by folder id reached");
-    res.sendStatus(200);
+    res.status(200);
   });
 
 export default router;
