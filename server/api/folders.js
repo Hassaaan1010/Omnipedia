@@ -32,10 +32,6 @@ router
       sendErrResp(res, { status: error.status, message: error.message });
     }
   })
-  .get("/:id", apiLimiter, async (req, res) => {
-    console.log("get folders by folder id reached");
-    res.send(200);
-  })
   .post("/addPost/", apiLimiter, authorizeToken, async (req, res) => {
     console.log("post add post to existing folder reached");
     res.send(200);
@@ -47,15 +43,19 @@ router
     const folderName = req.body.folderName;
     console.log(userId, folderName);
     try {
-      const createdFolder = createFolder(userId, folderName);
+      const createdFolder = await createFolder(userId, folderName);
       res.status(200).json({ createdFolder });
     } catch (error) {
       sendErrResp(res, { status: error.status, message: error.message });
     }
   })
-  .post("/createAndadd/", apiLimiter, authorizeToken, async (req, res) => {
-    console.log("post create new folder add post reached");
+  .get("/:id", apiLimiter, async (req, res) => {
+    console.log("get folders by folder id reached");
     res.send(200);
   });
+// .post("/createAndadd/", apiLimiter, authorizeToken, async (req, res) => {
+//   console.log("post create new folder add post reached");
+//   res.send(200);
+// });
 
 export default router;

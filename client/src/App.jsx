@@ -52,7 +52,7 @@ function App() {
             <Route path="/post/:id" element={<ViewPost />} />
             <Route path="/posts/create/:topicId" element={<CreatePost />} />
 
-            <Route path="/topic" element={<Topics />} />
+            {/* <Route path="/topic" element={<Topics />} /> */}
             <Route path="/topic/:subjectId/:topicId" element={<Topic />} />
 
             <Route path="/profile/:id" element={<Profile />} />

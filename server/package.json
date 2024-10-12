@@ -20,7 +20,10 @@
     "lunr": "^2.3.9",
     "mongodb": "^6.9.0",
     "mongoose": "^8.7.0",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",

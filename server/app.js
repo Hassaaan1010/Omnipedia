@@ -1,6 +1,5 @@
 import express from "express";
 import morgan from "morgan";
-
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -19,10 +18,20 @@ const cors_options = {
   optionsSuccessStatus: 200,
 };
 
-app.use(cors(cors_options));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-routerNode(app);
+const logRequestDetails = (req, res, next) => {
+  const currentDateTime = new Date().toLocaleString(); // Get current date and time
+  console.log("---- Incoming Request ----");
+  console.log(`Date and Time: ${currentDateTime}`);
+  console.log(`Route: ${req.method} ${req.originalUrl}`);
+  console.log("Headers:", req.headers);
+  if (req.body) {
+    console.log("Body:", req.body);
+  } else {
+    console.log("Body: No body provided");
+  }
+  console.log("--------------------------");
+  next(); // Move to the next middleware or route handler
+};
 
 morgan.token("customDate", () => {
   const currentDate = new Date().toISOString();
@@ -33,6 +42,11 @@ app.use(
     ":method :url :status :response-time ms - :res[content-length] :customDate"
   )
 );
+app.use(logRequestDetails);
+app.use(cors(cors_options));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+routerNode(app);
 
 (async () => {
   try {
