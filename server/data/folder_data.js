@@ -47,22 +47,47 @@ const createFolder = async (userId, folderName) => {
   return createdFolder;
 };
 
-const addPostToFolder = async (postId, folderId) => {
+const addPostToFolder = async (postId, folderId, userId) => {
   try {
-    const response = await Folder.findByIdAndUpdate(
-      folderId,
-      { $push: { posts: postId } }
-      // { new: true }
+    //find folders with their posts
+    const user = await User.findOne({ _id: userId }, "folders").populate({
+      path: "folders",
+      select: "posts",
+    });
+
+    //if the post already exists in any of users folders
+    const postExists = user.folders.some((folder) =>
+      folder.posts.includes(postId)
     );
+
+    if (postExists) {
+      throw new Error("Post already exists in another folder.");
+    }
+
+    await Folder.findByIdAndUpdate(
+      folderId,
+      { $push: { posts: postId } },
+      { new: true }
+    );
+
     return "Post saved to folder successfully";
   } catch (error) {
-    throw new Error("Failed to save post to folder");
+    throw new Error(error.message || "Failed to save post to folder");
   }
 };
 
-const removePostFromFolder = async (postId, userId) => {
+const removePostFromFolder = async (postId, userId, folderId) => {
   try {
     //  implement after saved state persisting
+    const updatedFolder = await Folder.findByIdAndUpdate(
+      folderId,
+      {
+        $pull: { posts: postId },
+      },
+      { new: true }
+    );
+
+    console.log(updatedFolder);
 
     return "Post removed from  folder successfully";
   } catch (error) {
@@ -95,12 +120,21 @@ const checkBookmarked = async (userId, postId) => {
     console.log("folders fetched", fetchedFolders);
 
     // Check if postId exists in any of the fetched folders
-    const isBookmarked = fetchedFolders.some((folder) =>
+    const existingFolder = fetchedFolders.find((folder) =>
       folder.posts.includes(postId)
     );
 
-    console.log(`Post ${postId} bookmarked:`, isBookmarked);
-    return isBookmarked;
+    if (existingFolder) {
+      return {
+        isBookmarked: true,
+        folderId: existingFolder._id,
+      };
+    } else {
+      return {
+        isBookmarked: false,
+        folderId: null,
+      };
+    }
   } catch (error) {
     throw error;
   }

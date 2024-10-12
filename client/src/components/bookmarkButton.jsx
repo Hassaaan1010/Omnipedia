@@ -11,8 +11,31 @@ const BookmarkButton = () => {
   const [selectedFolder, setSelectedFolder] = useState("");
   const [newFolderForm, setNewFolderForm] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
+  const [savedFolder, setSavedFolder] = useState("");
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    try {
+      const getBookmarkedState = async () => {
+        const bookmarkResponse = await axios.get(
+          "http://localhost:4000/checkBookmarked/",
+          {
+            params: { userId, postId },
+          }
+        );
+        console.log("Response:", bookmarkResponse.data);
+        setIsBookmarked(bookmarkResponse.data.isBookmarked);
+        if (isBookmarked) {
+          setSavedFolder(bookmarkResponse.data.folderId);
+        }
+      };
+      getBookmarkedState();
+    } catch (error) {
+      console.error("Error:", error.response?.data || error.message);
+      throw error;
+    }
+  }, [postId]);
 
   const showFolders = async () => {
     try {
@@ -40,6 +63,7 @@ const BookmarkButton = () => {
           {
             postId: postId,
             userId: userId,
+            folderId: savedFolder,
           },
           {
             headers: {
@@ -82,6 +106,7 @@ const BookmarkButton = () => {
           {
             postId: postId,
             folderId: selectedFolder,
+            userId: userId,
           },
           {
             headers: {

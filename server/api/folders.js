@@ -63,8 +63,11 @@ router
       const { userId, folderId } = req.query; // Extract query params
       console.log("asdfsa", userId, folderId);
       try {
-        const isBookmarked = await checkBookmarked(userId, folderId);
-        res.status(200).json({ isBookmarked });
+        const { isBookmarked, folderId } = await checkBookmarked(
+          userId,
+          folderId
+        );
+        res.status(200).json({ isBookmarked, folderId });
       } catch (error) {
         console.log(error);
         sendErrResp(res, { status: error.status, message: error.message });
@@ -89,12 +92,14 @@ router
   .post("/removePost/", apiLimiter, authorizeToken, async (req, res) => {
     console.log("post REMOVE post to existing folder reached");
     try {
-      const { postId, userId } = req.body;
-      if (!isObjectIdOrHexString(postId) || !isObjectIdOrHexString(userId)) {
+      const { postId, userId, folderId } = req.body;
+      console.log(postId, userId, folderId);
+      if (!isObjectIdOrHexString(postId) || !isObjectIdOrHexString(folderId)) {
         throw badRequestErr("invalid data sent");
       }
+      console.log("cleared undef validation");
 
-      const message = await removePostFromFolder(postId, userId);
+      const message = await removePostFromFolder(postId, userId, folderId);
       res.status(201).json({ message: message });
     } catch (error) {
       sendErrResp(res, { status: error.status, message: error.message });
