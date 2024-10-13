@@ -187,10 +187,30 @@ const createFolderAndSave = async (folderName, postId, userId) => {
   return createdFolder;
 };
 
+const getPosts = async (folderId) => {
+  folderId = folderId.trim();
+  if (!folderId || !isObjectIdOrHexString(folderId)) {
+    console.log("bad folderId sent");
+    throw badRequestErr("Invalid folder requested");
+  }
+
+  //   returns folder object that has .posts attribute which is array of posts, each post ke _id, likes, dislikes, title, grade
+  const fetchedPosts = await Folder.findOne(
+    { _id: folderId },
+    "posts"
+  ).populate({
+    path: "posts",
+    select: "_id likes dislikes title grade",
+  });
+  console.log(fetchedPosts);
+  return fetchedPosts.posts;
+};
+
 export {
   createFolder,
   addPostToFolder,
   removePostFromFolder,
   checkBookmarked,
   createFolderAndSave,
+  getPosts,
 };

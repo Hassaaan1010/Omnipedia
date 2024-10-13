@@ -7,6 +7,7 @@ import {
   removePostFromFolder,
   checkBookmarked,
   createFolderAndSave,
+  getPosts,
 } from "../data/folder_data.js";
 import { badRequestErr, sendErrResp } from "../utils/errorHandling.js";
 import { authorizeToken } from "../middleware/jwtAuthorizer.js";
@@ -68,7 +69,7 @@ router
           userId,
           postId
         );
-        res.status(200).json({ isBookmarked, folderId2: folderId });
+        res.status(200).json({ isBookmarked, folderId2: folderId }); //   POSSIBLE ISSUE WITH FOLDER2 CHECK CLIENT SIDE ATTRIBUTES CHECK
       } catch (error) {
         console.log(error);
         sendErrResp(res, { status: error.status, message: error.message });
@@ -113,21 +114,42 @@ router
     }
   })
   .post("/createAndAdd/", apiLimiter, authorizeToken, async (req, res) => {
-    console.log("post create new folder add post reached");
+    try {
+      console.log("post create new folder add post reached");
 
-    // i need folder name, user id, and post id.
-    console.log("BODY RECIEVED", req.body);
-    let { folderName, postId, userId } = req.body;
+      // i need folder name, user id, and post id.
+      console.log("BODY RECIEVED", req.body);
+      let { folderName, postId, userId } = req.body;
 
-    const createdFolder = await createFolderAndSave(folderName, postId, userId);
-    res.status(201).json({
-      message: "Post saved to new folder successfully",
-      newFolder: createdFolder,
-    });
+      const createdFolder = await createFolderAndSave(
+        folderName,
+        postId,
+        userId
+      );
+      res.status(201).json({
+        message: "Post saved to new folder successfully",
+        newFolder: createdFolder,
+      });
+    } catch (error) {
+      console.log(error);
+      sendErrResp(res, { status: error.status, message: error.message });
+    }
   })
-  .get("/:id", apiLimiter, async (req, res) => {
-    console.log("get posts by folder id reached");
-    res.status(200);
+  .get("/:folderId", apiLimiter, async (req, res) => {
+    try {
+      console.log("get posts by folder id reached");
+      let folderId = req.params.folderId;
+      console.log("folder Id", folderId);
+
+      const fetchedPosts = await getPosts(folderId);
+
+      res
+        .status(200)
+        .json({ message: "folder content found and returned", fetchedPosts });
+    } catch (error) {
+      console.log(error);
+      sendErrResp(res, { status: error.status, message: error.message });
+    }
   });
 
 export default router;

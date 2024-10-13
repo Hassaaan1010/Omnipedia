@@ -26,7 +26,8 @@ import Profile from "./components/profile";
 import CreateOmnipost from "./components/createOmnipost";
 import Omnipost from "./components/viewOmnipost";
 import SearchResults from "./components/searchResults";
-import MyFolders from "./components/myFolders.jsx";
+import ViewFolder from "./components/folder";
+// import MyFolders from "./components/myFolders.jsx";
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -66,7 +67,7 @@ function App() {
             {/* Route to see myFolders */}
             {/* CONVERTED TO POPUP <Route path="/folders/:userId" element={<MyFolders />} />  */}
             {/* Route to a folder */}
-            {/* <Route path="/folder/:folderid" element={123} /> */}
+            <Route path="/folder/:folderId" element={<ViewFolder />} />
             {/* <Route path="" element={123} /> */}
 
             {/* add topics should be a pop up not a route*/}
