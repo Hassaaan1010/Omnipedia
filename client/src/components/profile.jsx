@@ -1,4 +1,5 @@
 import Navbar from "./navbar";
+import MyFolders from "./myFolders";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -22,6 +23,8 @@ const Profile = () => {
     folders: [],
     owner: false,
   });
+  const [showFolders, setShowFolders] = useState(false);
+  console.log("showfold", showFolders);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -90,6 +93,14 @@ const Profile = () => {
     }
   }, [token]); // Add token as a dependency
 
+  const handleShowFolders = () => {
+    setShowFolders(true);
+  };
+
+  const handleHideFolders = () => {
+    setShowFolders(false);
+  };
+
   return (
     <>
       <Navbar authorized={tokenAuthorized}></Navbar>
@@ -144,9 +155,21 @@ const Profile = () => {
           <Subjects userId={id}></Subjects>
         </div>
         <div>
-          <Link to={`http://localhost:5173/folders/${response.userId}`}>
+          {/* <Link to={`http://localhost:5173/folders/${response.userId}`}>
             Folders
-          </Link>
+          </Link> */}
+          <button onClick={handleShowFolders}>Folders</button>
+        </div>
+        <div className="foldersPopup">
+          {showFolders && (
+            <div className="popup-overlay">
+              <div className="popup">
+                <MyFolders profileId={id}></MyFolders>
+                {/* <h1>Folders</h1> */}
+                <button onClick={handleHideFolders}>Back</button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

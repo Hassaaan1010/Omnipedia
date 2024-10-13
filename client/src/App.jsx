@@ -64,7 +64,7 @@ function App() {
             <Route path="/omniposts/:id" element={<Omnipost />} />
 
             {/* Route to see myFolders */}
-            <Route path="/folders/:userId" element={<MyFolders />} />
+            {/* CONVERTED TO POPUP <Route path="/folders/:userId" element={<MyFolders />} />  */}
             {/* Route to a folder */}
             {/* <Route path="/folder/:folderid" element={123} /> */}
             {/* <Route path="" element={123} /> */}

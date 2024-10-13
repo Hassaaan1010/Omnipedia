@@ -57,6 +57,14 @@ const Home = () => {
       ) : (
         <></>
       )}
+      <h2>About Omnipedia</h2>
+      <h3>
+        Welcome to Omnipedia, your all-in-one knowledge hub designed to foster
+        learning, collaboration, and community-driven content. Our platform aims
+        to bridge the gap between curiosity and understanding, offering a space
+        where students, educators, and enthusiasts can explore, share, and
+        organize knowledge across various subjects and topics.
+      </h3>
     </>
   );
 };

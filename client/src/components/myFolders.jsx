@@ -3,10 +3,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Navbar from "./navbar.jsx";
 import { tokenValid } from "../utils/tokenValidation.js";
 import axios from "axios";
-const MyFolders = () => {
+
+const MyFolders = (props) => {
   const [showPopup, setShowPopup] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
-  const { userId: profileId } = useParams();
+  const profileId = props.profileId;
   const token = localStorage.getItem("token");
   const [tokenAuthorized, setTokenAuthorized] = useState(false);
   const [owner, setOwner] = useState(false);
@@ -21,6 +22,7 @@ const MyFolders = () => {
     }
     try {
       const getFolders = async () => {
+        console.log(profileId);
         const res = await axios.get(
           `http://localhost:4000/folders/all/${profileId}`
         );
@@ -106,7 +108,7 @@ const MyFolders = () => {
 
   return (
     <>
-      <Navbar authorized={tokenAuthorized}></Navbar>
+      {/* <Navbar authorized={tokenAuthorized}></Navbar> */}
       <h2>My folders</h2>
       {response.folders.map((folder, i) => (
         <div style={{ backgroundColor: "lightgray" }} key={i}>
