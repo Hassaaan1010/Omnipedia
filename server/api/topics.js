@@ -6,6 +6,9 @@ import {
   notFoundErr,
   sendErrResp,
 } from "../utils/errorHandling.js";
+import { apiLimiter } from "../middleware/rateLimiter.js";
+import { authorizeToken } from "../middleware/jwtAuthorizer.js";
+import { createTopic } from "../data/topic_data.js";
 
 const router = express.Router();
 
@@ -16,6 +19,18 @@ router
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Error creating topics", error });
+    }
+  })
+  .post("/create", apiLimiter, authorizeToken, async (req, res) => {
+    console.log(req.body);
+    try {
+      let { subjectId, topicName } = req.body;
+      const newTopic = await createTopic(topicName, subjectId);
+
+      res.status(200).json({ newTopic: newTopic });
+    } catch (error) {
+      console.log(error);
+      sendErrResp(res, { status: error.status, message: error.message });
     }
   })
   .get("/:subjectId/:topicId", async (req, res) => {

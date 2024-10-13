@@ -2,6 +2,7 @@ import axios from "axios";
 import { tokenValid } from "../utils/tokenValidation";
 import { useEffect, useState } from "react";
 import Navbar from "./navbar";
+import Posts from "./posts";
 import { useNavigate, useParams } from "react-router-dom";
 
 const ViewFolder = () => {
@@ -9,6 +10,10 @@ const ViewFolder = () => {
   const token = localStorage.getItem("token");
   const [tokenAuthorized, setTokenAuthorized] = useState(false);
   const navigate = useNavigate();
+  const [response, setResponse] = useState({
+    message: "",
+    posts: [],
+  });
 
   useEffect(() => {
     try {
@@ -17,7 +22,12 @@ const ViewFolder = () => {
           `http://localhost:4000/folders/${folderId}`
         );
         console.log("response", resp.data);
+        setResponse({
+          message: resp.data.message,
+          posts: resp.data.fetchedPosts,
+        });
       };
+
       getSavedPosts();
     } catch (error) {
       console.log("ERROR", error);
@@ -25,7 +35,7 @@ const ViewFolder = () => {
         navigate("/notFound");
       }
     }
-  });
+  }, [folderId]);
 
   useEffect(() => {
     // authorization
@@ -60,6 +70,7 @@ const ViewFolder = () => {
     <>
       <Navbar authorized={tokenAuthorized}></Navbar>
       <h1>View Folder</h1>
+      <Posts posts={response.posts}></Posts>
     </>
   );
 };

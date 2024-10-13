@@ -25,5 +25,5 @@ const topicSchema = new Schema({
   },
 });
 
-const Topic = model("topic", topicSchema);
+const Topic = model("Topic", topicSchema);
 export default Topic;

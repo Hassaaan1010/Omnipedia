@@ -95,7 +95,7 @@ const ViewPost = () => {
     <>
       <Navbar authorized={tokenAuthorized}></Navbar>
       <div>
-        <h2>Post : {post.title}</h2>
+        <h2>Title : {post.title}</h2>
         <span>
           <Link to={`http://localhost:5173/profile/${post.userId}`}>
             Author

@@ -13,9 +13,9 @@ const Subject = () => {
   const [following, setFollowing] = useState(false);
   const [response, setResponse] = useState({
     subjectName: "",
-    topics: [],
     omniposts: [],
     owner: false,
+    topics: [],
   });
   const navigate = useNavigate();
 
@@ -146,6 +146,7 @@ const Subject = () => {
         owner={response.owner}
         subjectId={id}
         authorized={tokenAuthorized}
+        setResponse={setResponse}
       />
       <Omniposts
         subjectId={id}

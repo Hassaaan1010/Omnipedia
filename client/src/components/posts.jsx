@@ -31,6 +31,7 @@ const Posts = ({ posts }) => {
     } else {
       sortedArray.sort(
         (first, second) => second.likes.length - first.likes.length
+        // (first, second) => (second.likes.length - second.dislikes.length) - (first.likes.length - first.dislikes.length)
       );
     }
 
