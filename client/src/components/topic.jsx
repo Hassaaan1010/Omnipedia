@@ -4,10 +4,12 @@ import { tokenValid } from "../utils/tokenValidation";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import Navbar from "./navbar";
 import Posts from "./posts";
+import Description from "./description";
 
 const Topic = () => {
   const token = localStorage.getItem("token");
   const [tokenAuthorized, setTokenAuthorized] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
   const { subjectId, topicId } = useParams();
   const [response, setResponse] = useState({
     subjectId: "",
@@ -87,6 +89,37 @@ const Topic = () => {
         <Link to={`/subject/${subjectId}`}>Back</Link> {/* Use relative path */}
       </button>
       <h3>{response.topicName.toUpperCase()}</h3>
+      {tokenAuthorized && (
+        <>
+          <button
+            onClick={() => {
+              setShowDescription(true);
+            }}
+          >
+            Show Description
+          </button>
+        </>
+      )}
+      {showDescription && (
+        <>
+          <div className="popup-overlay">
+            <div className="popup">
+              <Description
+                topicName={response.topicName}
+                topicId={topicId}
+              ></Description>
+              <br />
+              <button
+                onClick={() => {
+                  setShowDescription(false);
+                }}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </>
+      )}
       <Posts posts={response.posts} />
       <button>
         <Link to={`http://localhost:5173/posts/create/${topicId}`}>

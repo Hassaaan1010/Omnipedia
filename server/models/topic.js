@@ -20,8 +20,8 @@ const topicSchema = new Schema({
     },
   ],
   llm_content: {
-    type: Schema.Types.ObjectId, // Link to an LLM-generated post (assuming a post model)
-    ref: "Post",
+    type: String, // Link to an LLM-generated description
+    default: undefined,
   },
 });
 
