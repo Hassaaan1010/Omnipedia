@@ -1,0 +1,43 @@
+curl \
+  -H 'Content-Type: application/json' \
+  -d '{"contents":[{"parts":[{"text":"Write a short easy to understand description of Discreet maths"}]}]}' \
+  -X POST 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=<MYAPIKEY>'
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Discrete math is like a toolbox for working with things that come in separate pieces, like numbers, letters, or shapes.  \n\n**Instead of smooth lines and continuous change, it deals with: **\n\n* **Counting:** How many ways can you arrange 5 books on a shelf?\n* **Logic:** If it's raining, then the ground is wet. Is that statement true?\n* **Sets:** Grouping things together, like all the even numbers or all the fruits in a basket.\n* **Graphs:** Representing relationships, like connections between cities or friends on social media.\n\n**Discrete math is important for:**\n\n* **Computer science:** Building algorithms and understanding computer systems.\n* **Statistics:** Analyzing data and making predictions.\n* **Cryptography:** Keeping information safe and secure.\n\nThink of it as a foundation for building more complex systems and solving problems in many different fields! \n"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0,
+      "safetyRatings": [
+        {
+          "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+          "probability": "NEGLIGIBLE"
+        },
+        {
+          "category": "HARM_CATEGORY_HATE_SPEECH",
+          "probability": "NEGLIGIBLE"
+        },
+        {
+          "category": "HARM_CATEGORY_HARASSMENT",
+          "probability": "NEGLIGIBLE"
+        },
+        {
+          "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+          "probability": "NEGLIGIBLE"
+        }
+      ]
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 11,
+    "candidatesTokenCount": 183,
+    "totalTokenCount": 194
+  }
+}

@@ -61,3 +61,16 @@ routerNode(app);
     console.log("Issue connecting to server/mongodb.", error);
   }
 })();
+
+const gracefulShutdown = () => {
+  console.log("Shutting down gracefully...");
+  server.close(() => {
+    console.log("Server closed.");
+    process.exit(0);
+  });
+};
+
+// Handle process termination events
+process.on("SIGINT", gracefulShutdown); // Ctrl+C or manual stop
+process.on("SIGTERM", gracefulShutdown); // Termination signal from OS
+process.on("exit", gracefulShutdown); // Nodemon restart triggers exit

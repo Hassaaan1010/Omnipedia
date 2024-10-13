@@ -10,6 +10,7 @@ import subjectsRouter from "./subjects.js";
 import topicsRouter from "./topics.js";
 import omnipostsRouter from "./omniposts.js";
 import searchRouter from "./search.js";
+import llmRouter from "./generate.js";
 
 const routerNode = (app) => {
   app.use("/login", loginRouter);
@@ -23,6 +24,7 @@ const routerNode = (app) => {
   app.use("/omniposts", omnipostsRouter);
   app.use("/subjects", subjectsRouter);
   app.use("/topics", topicsRouter);
+  app.use("/generate", llmRouter);
 
   // if user is logged in, /login will redirect to home
   // app.use("*", (req, res) => {
