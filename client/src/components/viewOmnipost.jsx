@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { tokenValid } from "../utils/tokenValidation";
 import Navbar from "./navbar";
+import DeleteButton from "./deleteButton";
 import VoteForm from "./voteForm";
 import BookmarkButton from "./bookmarkButton";
 import axios from "axios";
@@ -12,6 +13,8 @@ const ViewOmnipost = () => {
   const token = localStorage.getItem("token");
   const requesterId = localStorage.getItem("userId");
   const [tokenAuthorized, setTokenAuthorized] = useState(false);
+  const [admin, setAdmin] = useState(false);
+  const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [bookmarked, setBookmarked] = useState(false);
   const [omnipost, setOmnipost] = useState({
@@ -70,15 +73,21 @@ const ViewOmnipost = () => {
     if (token && tokenValid(token)) {
       const checkAuthorization = async () => {
         try {
-          const res = await axios.get("http://localhost:4000/home/", {
+          const res = await axios.get("http://localhost:4000/home/checkAdmin", {
             headers: {
               Authorization: `Bearer ${token}`, // Correct Authorization header
+            },
+            params: {
+              userId: userId,
             },
           });
 
           if (res.data.authorized) {
             console.log("auth :", res.data.authorized);
             setTokenAuthorized(true);
+          }
+          if (res.data.admin) {
+            setAdmin(true);
           }
         } catch (error) {
           console.error("Error during authorization check:", error);
@@ -98,6 +107,13 @@ const ViewOmnipost = () => {
     <>
       <Navbar authorized={tokenAuthorized}></Navbar>
       <div>
+        {omnipost.subjectId && (
+          <button>
+            <Link to={`http://localhost:5173/subject/${omnipost.subjectId}`}>
+              Back
+            </Link>
+          </button>
+        )}
         <h2>Omnipost : {omnipost.title}</h2>
         <span>
           <Link to={`http://localhost:5173/profile/${omnipost.userId}`}>
@@ -128,7 +144,15 @@ const ViewOmnipost = () => {
               likes={omnipost.likes}
               dislikes={omnipost.dislikes}
             ></VoteForm>
-            <BookmarkButton bookmarked={bookmarked}></BookmarkButton>
+            {/* <BookmarkButton bookmarked={bookmarked}></BookmarkButton> */}
+            {admin && (
+              <DeleteButton
+                type={"omnipost"}
+                userId={userId}
+                contentId={omnipostId}
+                authorized={true}
+              ></DeleteButton>
+            )}
           </>
         ) : (
           <></>

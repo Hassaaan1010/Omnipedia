@@ -19,7 +19,7 @@ const Navbar = ({ authorized }) => {
       // Clear localStorage and navigate to "/home"
       localStorage.clear();
       setShowPopup(false);
-      navigate("/home");
+      navigate("/login");
     } catch (error) {
       console.log("Error logging out:", error);
     }

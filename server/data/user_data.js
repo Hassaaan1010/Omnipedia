@@ -125,3 +125,23 @@ export const authenticateUser = async (email, password) => {
     throw unauthorizedErr("Incorrect password");
   }
 };
+
+export const checkUserAdmin = async (userId) => {
+  userId = userId.trim();
+  if (!isObjectIdOrHexString(userId)) {
+    throw badRequestErr("Invalid Id");
+  }
+
+  try {
+    const user = await User.findById(userId).select("role"); // Only fetch role
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return user.role === "admin";
+  } catch (error) {
+    console.log(error);
+    throw internalServerErr(" Error checking user for admin role");
+  }
+};

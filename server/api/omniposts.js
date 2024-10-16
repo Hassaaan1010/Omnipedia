@@ -4,6 +4,7 @@ import { authorizeToken } from "../middleware/jwtAuthorizer.js";
 import { badRequestErr, sendErrResp } from "../utils/errorHandling.js";
 import { createOmnipost } from "../data/omnipost_data.js";
 import OmniPost from "../models/omnipost.js";
+import { isObjectIdOrHexString } from "mongoose";
 
 const router = express.Router();
 
@@ -103,6 +104,24 @@ router
       res.status(204).json({ success: true });
     } catch (error) {
       console.log("error disliking : ", error);
+      sendErrResp(res, { status: error.status, message: error.message });
+    }
+  })
+  .post("/delete", apiLimiter, authorizeToken, async (req, res) => {
+    console.log("reached post delete route");
+    const { contentId } = req.body;
+    console.log(contentId, "body", req.body);
+
+    try {
+      if (!contentId || !isObjectIdOrHexString(contentId)) {
+        throw badRequestErr("Content id invalid.");
+      }
+      await OmniPost.findByIdAndDelete(contentId);
+      return res
+        .status(200)
+        .json({ message: " content successfully deleted " });
+    } catch (error) {
+      console.log(error);
       sendErrResp(res, { status: error.status, message: error.message });
     }
   });

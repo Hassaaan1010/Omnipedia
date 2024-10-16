@@ -4,7 +4,9 @@ import { createPost } from "../data/post_data.js";
 import { apiLimiter } from "../middleware/rateLimiter.js";
 import { authorizeToken } from "../middleware/jwtAuthorizer.js";
 import Post from "../models/post.js";
+import { isObjectIdOrHexString } from "mongoose";
 const router = express.Router();
+import { checkUserAdmin } from "../data/user_data.js";
 
 const linkRegex = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(:\d+)?(\/[^\s]*)?$/i;
 
@@ -92,11 +94,27 @@ router
       );
 
       console.log("fetched :", updatedPost);
-      res.status(204).json({ success: true });
+      res.status(200).json({ success: true });
     } catch (error) {
       console.log("error disliking : ", error);
       sendErrResp(res, { status: error.status, message: error.message });
     }
+  })
+  .post("/delete", apiLimiter, authorizeToken, async (req, res) => {
+    console.log("reached post delete route");
+    const { contentId } = req.body;
+    console.log(contentId, "body", req.body);
+
+    try {
+      if (!contentId || !isObjectIdOrHexString(contentId)) {
+        throw badRequestErr("Content id invalid.");
+      }
+      await Post.findByIdAndDelete(contentId);
+      res.status(200).json({ message: " content successfully deleted " });
+    } catch (error) {
+      sendErrResp(res, { status: error.status, message: error.message });
+    }
+    res.status(200);
   });
 
 export default router;

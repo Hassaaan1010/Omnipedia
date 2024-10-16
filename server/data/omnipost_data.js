@@ -24,6 +24,7 @@ const createOmnipost = async (
   //   trim title and links
   title = title.trim();
   links = links.map((element) => element.trim());
+  links = links.filter((ele) => ele !== "");
 
   //content moderation
   const appropriateText = await textContentModeration(title, textContent);

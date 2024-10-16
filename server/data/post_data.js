@@ -31,6 +31,7 @@ const createPost = async (
   //   trim title and links
   title = title.trim();
   links = links.map((element) => element.trim());
+  links = links.filter((element) => element !== "");
 
   if (!nameRegex.test(title)) {
     throw badRequestErr("Improper title");
